@@ -19,6 +19,12 @@ import multer from 'multer';
 
 dotenv.config();
 
+// When running as an ES module (package.json "type": "module") __dirname is not defined.
+// Provide equivalents using import.meta.url so existing code that uses __dirname continues to work.
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
 
 // Request Logger
