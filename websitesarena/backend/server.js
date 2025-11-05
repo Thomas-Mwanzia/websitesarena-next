@@ -51,7 +51,7 @@ const validateInput = (schema) => {
 // Global Middleware
 app.use(requestLogger);
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000', // Next.js default port
+  origin: process.env.CLIENT_URL || 'websitesraena.com', // Next.js default port
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -1470,7 +1470,7 @@ app.post('/api/careers', careersUpload.single('cv'), async (req, res) => {
     }
     const application = await CareerApplication.create({ name, email, phone, message, cvUrl });
     // Build absolute CV link
-    const siteUrl = process.env.SITE_URL || 'http://localhost:5000';
+    const siteUrl = process.env.SITE_URL || 'api.websitesraena.com';
     const cvLink = cvUrl ? `${siteUrl}${cvUrl}` : '';
     // Send confirmation email
     let emailResult = { success: false };

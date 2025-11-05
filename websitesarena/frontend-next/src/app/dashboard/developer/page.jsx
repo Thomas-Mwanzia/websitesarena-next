@@ -42,7 +42,7 @@ import {
   FaWhatsapp
 } from 'react-icons/fa';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'api.websitesraena.com';
 
 export default function DeveloperDashboard() {
   const [activities, setActivities] = useState([]);
@@ -119,7 +119,7 @@ export default function DeveloperDashboard() {
   const fetchActivities = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/activities');
+      const res = await axios.get('api.websitesraena.com/api/activities');
       setActivities(res.data.data || []);
     } catch {
       // handle error
@@ -131,7 +131,7 @@ export default function DeveloperDashboard() {
     if (workingOn[id]) return;
     try {
       const developerId = typeof window !== 'undefined' ? localStorage?.getItem('developerId') : null;
-      const res = await axios.post(`http://localhost:5000/api/activities/${id}/working`, developerId ? { developerId } : {});
+      const res = await axios.post(`api.websitesraena.com/api/activities/${id}/working`, developerId ? { developerId } : {});
       setActivities(activities.map(a => a._id === id ? res.data.data : a));
       const updated = { ...workingOn, [id]: true };
       setWorkingOn(updated);
@@ -147,7 +147,7 @@ export default function DeveloperDashboard() {
     if (!workingOn[id]) return;
     try {
       const developerId = typeof window !== 'undefined' ? localStorage?.getItem('developerId') : null;
-      const res = await axios.post(`http://localhost:5000/api/activities/${id}/not-working`, developerId ? { developerId } : {});
+      const res = await axios.post(`api.websitesraena.com/api/activities/${id}/not-working`, developerId ? { developerId } : {});
       setActivities(activities.map((a) => a._id === id ? res.data.data : a));
       const updated = { ...workingOn };
       delete updated[id];
@@ -167,7 +167,7 @@ export default function DeveloperDashboard() {
     setProfileMessage('');
     try {
       // Check if email and password are valid
-      const testRes = await axios.post('http://localhost:5000/api/developers/test-password', {
+      const testRes = await axios.post('api.websitesraena.com/api/developers/test-password', {
         email: profileEmail,
         password: profilePassword
       });
@@ -182,7 +182,7 @@ export default function DeveloperDashboard() {
         return;
       }
       // Update password
-      const updateRes = await axios.post('http://localhost:5000/api/developers/reset-password', {
+      const updateRes = await axios.post('api.websitesraena.com/api/developers/reset-password', {
         email: profileEmail,
         newPassword: profileNewPassword
       });
@@ -244,7 +244,7 @@ export default function DeveloperDashboard() {
       try {
         const devEmail = localStorage?.getItem('developerEmail');
         if (!devEmail) return;
-        const response = await axios.get(`http://localhost:5000/api/developers/name/${devEmail}`);
+        const response = await axios.get(`api.websitesraena.com/api/developers/name/${devEmail}`);
         // backend returns { success: true, data: { name, email } }
         const name = response?.data?.data?.name ?? response?.data?.name ?? '';
         setDeveloperName(name);
@@ -375,7 +375,7 @@ export default function DeveloperDashboard() {
       const devEmail = localStorage?.getItem('developerEmail');
       if (!devEmail) return;
       
-      const res = await axios.get(`http://localhost:5000/api/chats/${devEmail}`);
+      const res = await axios.get(`api.websitesraena.com/api/chats/${devEmail}`);
       const messages = res.data.data || [];
       setAdminMessages(messages);
       
@@ -383,7 +383,7 @@ export default function DeveloperDashboard() {
       const unreadMessages = messages.filter(msg => !msg.read);
       await Promise.all(
         unreadMessages.map(msg => 
-          axios.patch(`http://localhost:5000/api/chats/${msg._id}/read`)
+          axios.patch(`api.websitesraena.com/api/chats/${msg._id}/read`)
         )
       );
     } catch (error) {
@@ -401,7 +401,7 @@ export default function DeveloperDashboard() {
 
     const checkUnread = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/chats/unread/${devEmail}`);
+        const res = await axios.get(`api.websitesraena.com/api/chats/unread/${devEmail}`);
         setUnreadCount(res.data.data);
       } catch (error) {
         console.error('Error checking unread messages:', error);
@@ -425,7 +425,7 @@ const handleEditMessage = async (messageId, currentText) => {
       if (!newText || newText === currentText) return;
 
       try {
-        const res = await axios.patch(`http://localhost:5000/api/chats/${messageId}`, {
+        const res = await axios.patch(`api.websitesraena.com/api/chats/${messageId}`, {
           message: newText
         });
         setAdminMessages(messages =>
@@ -542,7 +542,7 @@ const handleEditMessage = async (messageId, currentText) => {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/chats/${messageId}`);
+      await axios.delete(`api.websitesraena.com/api/chats/${messageId}`);
       setAdminMessages(messages => messages.filter(msg => msg._id !== messageId));
       toast.success('Message deleted successfully');
     } catch (error) {
@@ -553,7 +553,7 @@ const handleEditMessage = async (messageId, currentText) => {
   // Add markAsRead function
   const markAsRead = async (messageId) => {
     try {
-      await axios.patch(`http://localhost:5000/api/chats/${messageId}/read`);
+      await axios.patch(`api.websitesraena.com/api/chats/${messageId}/read`);
       setAdminMessages(messages =>
         messages.map(msg =>
           msg._id === messageId ? { ...msg, read: true } : msg
@@ -584,7 +584,7 @@ const handleEditMessage = async (messageId, currentText) => {
 
     setSendingMessage(true);
     try {
-      const res = await axios.post('http://localhost:5000/api/chats/send', {
+      const res = await axios.post('api.websitesraena.com/api/chats/send', {
         sender: profileEmail,
         receiver: 'admin',
         message: newMessage.trim()
@@ -1149,7 +1149,7 @@ const Teams = () => {
   // Fetch developer name from the server
   const fetchDeveloperName = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/developers/name/${devEmail}`);
+      const response = await axios.get(`api.websitesraena.com/api/developers/name/${devEmail}`);
       if (response.data && response.data.success) {
         const name = response?.data?.data?.name ?? response?.data?.name ?? '';
         setDeveloperName(name);

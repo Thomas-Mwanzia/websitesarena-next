@@ -10,7 +10,7 @@ import { FaCheckCircle, FaPaperPlane, FaEye } from 'react-icons/fa';
 import axios from 'axios';
 
 const API_VERSION = '/api/v1';
-const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "api.websitesraena.com";
 
 const getStatusColor = (status) => {
   if (!status) return '';
@@ -1236,7 +1236,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
     if (!newText || newText === currentText) return;
 
     try {
-      const res = await axios.patch(`http://localhost:5000/api/chats/${messageId}`, {
+      const res = await axios.patch(`api.websitesraena.com/api/chats/${messageId}`, {
         message: newText
       });
       setChatMessages(messages => 
@@ -1251,7 +1251,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
     if (!confirm('Delete this message?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/chats/${messageId}`);
+      await axios.delete(`api.websitesraena.com/api/chats/${messageId}`);
       setChatMessages(messages => messages.filter(msg => msg._id !== messageId));
     } catch (error) {
       console.error('Error deleting message:', error);

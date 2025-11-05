@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'api.websitesraena.com';
 
 const Careers = () => {
   const [form, setForm] = useState({

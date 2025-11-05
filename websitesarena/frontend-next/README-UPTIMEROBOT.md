@@ -25,7 +25,7 @@ Invoke a quick GET to verify the route responds:
 
 ```powershell
 # from project root (or any machine with network access to the app)
-Invoke-RestMethod -Uri "http://localhost:3000/api/keepalive"
+Invoke-RestMethod -Uri "websitesraena.com/api/keepalive"
 ```
 
 Notes
