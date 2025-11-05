@@ -2,7 +2,9 @@ import axios from 'axios';
 
 // Create an axios instance with a base URL
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'api.websitesraena.com',
+  // Use NEXT_PUBLIC_API_URL for cross-origin or leave empty to use relative paths
+  // in production when frontend & backend are on the same origin.
+  baseURL: process.env.NEXT_PUBLIC_API_URL || '',
   headers: {
     'Content-Type': 'application/json',
   },

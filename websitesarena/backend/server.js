@@ -51,7 +51,8 @@ const validateInput = (schema) => {
 // Global Middleware
 app.use(requestLogger);
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'websitesraena.com', // Next.js default port
+  // Prefer explicit CLIENT_URL in your environment. Default to localhost for dev.
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -1312,10 +1313,9 @@ app.get('/api/email/analytics', async (req, res) => {
 });
 
 // Health API Endpoints
-app.get('/api/health/uptime', async (req, res) => {
-  // TODO: Integrate with real uptime monitoring service
-  res.json({ success: true, data: Array.from({ length: 30 }, (_, i) => ({ day: `Day ${i+1}`, uptime: 99 + Math.random() * 1 })) });
-});
+// NOTE: A production UptimeRobot-backed /api/health/uptime handler exists earlier
+// in this file. Removing the local mock duplicate prevents route shadowing.
+// If you want a development-only mock, add a conditional around it (NODE_ENV === 'development').
 
 app.get('/api/health/errors', async (req, res) => {
   // TODO: Integrate with real error log/monitoring
