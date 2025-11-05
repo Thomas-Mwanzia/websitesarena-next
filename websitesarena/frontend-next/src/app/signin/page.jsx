@@ -27,7 +27,7 @@ export default function SignIn() {
 
     try {
       // Sign in the developer
-      const res = await axios.post('api.websitesraena.com/api/developers/signin', {
+      const res = await axios.post('/api/developers/signin', {
         email,
         password
       });
@@ -177,7 +177,7 @@ export default function SignIn() {
               setError('');
               if (!/^[0-9]{6}$/.test(adminVerificationCode)) { setError('Enter a 6-digit code'); setLoading(false); return; }
               try {
-                const v = await axios.post('api.websitesraena.com/api/developers/verify-admin', { email: pendingEmail, code: adminVerificationCode });
+                const v = await axios.post('/api/developers/verify-admin', { email: pendingEmail, code: adminVerificationCode });
                 if (v.data.success && v.data.token) {
                   if (typeof window !== 'undefined') {
                     localStorage.setItem('token', v.data.token);

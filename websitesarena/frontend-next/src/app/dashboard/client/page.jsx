@@ -18,7 +18,7 @@ import {
 import axios from '@/app/utils/axios';
 import { toast } from 'react-hot-toast';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'api.websitesraena.com';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
 
 export default function ClientDashboard() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);

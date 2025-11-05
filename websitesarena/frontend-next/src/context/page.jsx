@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '@/app/utils/axios';
 
 const AuthContext = createContext();
 
@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in on page load
     const token = localStorage.getItem('token');
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       checkAuthStatus();
     } else {
       setLoading(false);
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await axios.get('/api/users/me');
+        const response = await api.get('/api/users/me');
       setUser(response.data);
       setIsAuthenticated(true);
       setIsAdmin(response.data.isAdmin);
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       localStorage.removeItem('token');
-      delete axios.defaults.headers.common['Authorization'];
+        delete api.defaults.headers.common['Authorization'];
     } finally {
       setLoading(false);
     }
@@ -48,10 +48,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+        const response = await api.post('/api/auth/login', { email, password });
       const { token, isAdmin: adminStatus } = response.data;
       localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setIsAuthenticated(true);
       setIsAdmin(adminStatus);
       await checkAuthStatus();
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
+      delete api.defaults.headers.common['Authorization'];
     setIsAuthenticated(false);
     setIsAdmin(false);
     setUser(null);

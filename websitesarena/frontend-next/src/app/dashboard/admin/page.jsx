@@ -7,10 +7,10 @@ import toast from 'react-hot-toast';
 import Head from "next/head";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { FaCheckCircle, FaPaperPlane, FaEye } from 'react-icons/fa';
-import axios from 'axios';
+// use the shared axios instance `api` for all requests (configured with interceptors)
 
 const API_VERSION = '/api/v1';
-const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "api.websitesraena.com";
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 const getStatusColor = (status) => {
   if (!status) return '';
@@ -176,7 +176,7 @@ const Dashboard = () => {
     setEmailLoading(true);
     const toastId = toast.loading('Fetching email analytics...');
     try {
-      const response = await axios.get(`${API_URL}/api/email/analytics`);
+  const response = await api.get('/api/email/analytics');
       setEmailStats(response.data.data);
       toast.success('Email analytics updated', { id: toastId });
     } catch (error) {
@@ -190,7 +190,7 @@ const Dashboard = () => {
   const fetchEmailLogs = async () => {
     setEmailLogsLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/email/logs`);
+  const res = await api.get('/api/email/logs');
       console.log('Email logs response:', res.data); // Add logging
     
       if (res.data.success) {
@@ -212,7 +212,7 @@ const Dashboard = () => {
   const fetchServerLogs = async () => {
     setLogsLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/admin/logs`);
+  const res = await api.get('/api/admin/logs');
       setServerLogs(res.data.data || []);
     } catch {
       toast.error('Failed to load server logs');
@@ -231,7 +231,7 @@ const Dashboard = () => {
   const fetchProjects = async () => {
     setProjectsLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/projects`);
+  const res = await api.get('/api/projects');
       setProjects(res.data.data || []);
     
     } catch { toast.error('Failed to refresh projects'); }
@@ -240,7 +240,7 @@ const Dashboard = () => {
   const fetchFeedbacks = async () => {
     setFeedbacksLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/feedback?admin=true`);
+  const res = await api.get('/api/feedback?admin=true');
       setFeedbacks(res.data.data || []);
       toast.success('Feedbacks refreshed');
     } catch { toast.error('Failed to refresh feedbacks'); }
@@ -249,7 +249,7 @@ const Dashboard = () => {
   const fetchBookings = async () => {
     setBookingsLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/bookings`);
+  const res = await api.get('/api/bookings');
       setBookings(res.data.data || []);
       toast.success('Bookings refreshed');
     } catch { toast.error('Failed to refresh bookings'); }
@@ -258,7 +258,7 @@ const Dashboard = () => {
   const fetchMessages = async () => {
     setMessagesLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/v1/messages`);
+  const res = await api.get('/api/v1/messages');
       setMessages(res.data.data || []);
       toast.success('Messages refreshed');
     } catch { toast.error('Failed to refresh messages'); }
@@ -267,7 +267,7 @@ const Dashboard = () => {
   const fetchCareers = async () => {
     setCareersLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/careers`);
+  const res = await api.get('/api/careers');
       setCareers(res.data.data || []);
       toast.success('Careers refreshed');
     } catch { toast.error('Failed to refresh careers'); }
@@ -278,12 +278,12 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      axios.get(`${API_URL}/api/projects`),
-      axios.get(`${API_URL}/api/feedback?admin=true`),
-      axios.get(`${API_URL}/api/bookings`),
-      axios.get(`${API_URL}/api/v1/messages`),
-      axios.get(`${API_URL}/api/careers`),
-      axios.get(`${API_URL}/api/email/logs`), // Change endpoint to match backend
+  api.get('/api/projects'),
+  api.get('/api/feedback?admin=true'),
+  api.get('/api/bookings'),
+  api.get('/api/v1/messages'),
+  api.get('/api/careers'),
+  api.get('/api/email/logs'), // Change endpoint to match backend
     ])
       .then(([proj, feed, book, msg, careersRes, emailRes]) => {
         setProjects(proj.data.data || []);
@@ -305,12 +305,12 @@ const Dashboard = () => {
   useEffect(() => {
     if (activeTab === 'analytics') {
       Promise.all([
-        axios.get(`${API_URL}/api/analytics/overview`),
-        axios.get(`${API_URL}/api/analytics/demographics`),
-        axios.get(`${API_URL}/api/analytics/devices`),
-        axios.get(`${API_URL}/api/analytics/browsers`),
-        axios.get(`${API_URL}/api/analytics/sources`),
-        axios.get(`${API_URL}/api/analytics/pages`),
+  api.get('/api/analytics/overview'),
+  api.get('/api/analytics/demographics'),
+  api.get('/api/analytics/devices'),
+  api.get('/api/analytics/browsers'),
+  api.get('/api/analytics/sources'),
+  api.get('/api/analytics/pages'),
         api.get('/api/analytics/engagement')
       ]).then(({
         overview,
@@ -384,7 +384,7 @@ const Dashboard = () => {
   // Fetch unread message counts
   const fetchUnreadCounts = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/chats/admin/unread`);
+  const res = await api.get('/api/chats/admin/unread');
       const counts = {};
       res.data.data.forEach(item => {
         counts[item._id] = item.count;
@@ -1236,7 +1236,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
     if (!newText || newText === currentText) return;
 
     try {
-      const res = await axios.patch(`api.websitesraena.com/api/chats/${messageId}`, {
+      const res = await axios.patch(`/api/chats/${messageId}`, {
         message: newText
       });
       setChatMessages(messages => 
@@ -1251,7 +1251,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
     if (!confirm('Delete this message?')) return;
 
     try {
-      await axios.delete(`api.websitesraena.com/api/chats/${messageId}`);
+  await axios.delete(`/api/chats/${messageId}`);
       setChatMessages(messages => messages.filter(msg => msg._id !== messageId));
     } catch (error) {
       console.error('Error deleting message:', error);
