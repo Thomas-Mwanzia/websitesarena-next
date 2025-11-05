@@ -5,7 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { Resend } from 'resend';
-import { fileURLToPath } from 'url';
+
 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -13,8 +13,8 @@ import axios from 'axios';
 import fs from 'fs';
 import path, { dirname, join } from 'path';
 import multer from 'multer';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+
+
 
 
 dotenv.config();
@@ -66,16 +66,13 @@ app.use((req, res, next) => {
 });
 if (process.env.NODE_ENV === "production") {
   // Serve the frontend's dist folder
-app.use(express.static(path.join(__dirname, '..', '..', 'websitesarena', 'frontend', 'dist')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', '..', 'websitesarena', 'frontend', 'dist', 'index.html'));
-});
 
   // Handle all non-API routes by sending index.html
-  app.get("*", (req, res) => {
-    res.sendFile(join(__dirname, "frontend", "dist", "index.html"));
-  });
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
+
 }
 // Rate Limiting
 const rateLimit = (windowMs, max) => {

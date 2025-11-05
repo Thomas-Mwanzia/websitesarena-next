@@ -69,7 +69,7 @@ const About = () => {
               animate={{ opacity: 1, y: 0 }}
               className="text-4xl md:text-5xl font-bold text-white mb-4"
             >
-              Our journey begins on Nov 5th, 2025
+              Nov 5th, 2025
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -213,7 +213,7 @@ const About = () => {
               <div className="relative z-10">
                 <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Your Project?</h2>
                 <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-                  Join hundreds of satisfied clients who have transformed their digital presence with us.
+                  Join tens of satisfied clients who have transformed their digital presence with us.
                 </p>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
