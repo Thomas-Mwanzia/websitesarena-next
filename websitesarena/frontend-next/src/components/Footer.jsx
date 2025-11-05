@@ -73,7 +73,6 @@ const Footer = () => {
                 { href: '/', text: 'Home' },
                 { href: '/about', text: 'About Us' },
                 { href: '/projects', text: 'Past Projects' },
-                { href: '/book-service', text: 'Book Service' },
                 { href: '/careers', text: 'Careers' },
               ].map((link) => (
                 <li key={link.text}>

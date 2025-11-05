@@ -6,12 +6,7 @@ import { FiTarget, FiUsers, FiAward, FiCode, FiHeart, FiTrendingUp } from 'react
 import Head from 'next/head';
 
 
-const stats = [
-  { label: 'Projects Completed', value: '200+' },
-  { label: 'Happy Clients', value: '150+' },
-  { label: 'Team Members', value: '20+' },
-  { label: 'Years Experience', value: '5+' }
-];
+// Stats removed per content update — we use narrative mission/vision instead
 
 const values = [
   {
@@ -38,29 +33,19 @@ const values = [
 
 const milestones = [
   {
-    year: '2018',
-    title: 'Company Founded',
-    description: 'Started with a small team of passionate developers'
+    year: '2025',
+    title: 'The Journey Begins',
+    description: 'We launched Websites Arena to deliver affordable, high‑quality web and mobile solutions.'
   },
   {
-    year: '2019',
-    title: 'First Major Project',
-    description: 'Successfully delivered our first enterprise solution'
+    year: '2026',
+    title: 'Templates & Marketplace',
+    description: 'Rolling out ready‑made website and mobile app templates to help businesses launch faster.'
   },
   {
-    year: '2020',
-    title: 'Team Expansion',
-    description: 'Grew our team and expanded service offerings'
-  },
-  {
-    year: '2021',
-    title: 'Global Reach',
-    description: 'Started serving clients worldwide'
-  },
-  {
-    year: '2023',
-    title: 'Industry Recognition',
-    description: 'Received multiple awards for web excellence'
+    year: '2027+',
+    title: 'Scaling Globally',
+    description: 'Expanding our marketplace, partnerships and team to become a global leader in templates and services.'
   }
 ];
 
@@ -76,46 +61,28 @@ const About = () => {
       </Head>
 
       <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
-        {/* Hero Section */}
-        <section className="pt-32 pb-20 px-4">
-          <div className="max-w-7xl mx-auto text-center">
-            <motion.h1 
+        {/* Hero — concise narrative */}
+        <section className="pt-32 pb-12 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 mb-6"
+              className="text-4xl md:text-5xl font-bold text-white mb-4"
             >
-              Who We Are
+              Our journey begins on Nov 5th, 2025
             </motion.h1>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-xl text-gray-300 max-w-3xl mx-auto"
+              transition={{ delay: 0.15 }}
+              className="text-lg text-gray-300 max-w-3xl mx-auto"
             >
-              We're a team of passionate developers, designers, and digital craftsmen dedicated to 
-              creating exceptional web experiences that help businesses thrive in the digital age.
+              In 2025 we launched Websites Arena to make great web and mobile experiences affordable
+              and accessible. We offer flexible payment plans, connect clients with the best third‑party
+              services, and operate with a distributed team of experienced developers worldwide.
+              Starting next year we'll also offer ready‑made website and mobile app templates to help
+              entrepreneurs and businesses move faster.
             </motion.p>
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="py-20 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="text-center"
-                >
-                  <div className="text-4xl font-bold text-blue-500 mb-2">{stat.value}</div>
-                  <div className="text-gray-400">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -147,6 +114,47 @@ const About = () => {
                   <p className="text-gray-400">{value.description}</p>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Mission & Vision */}
+        <section className="py-16 px-4 bg-gray-800/40">
+          <div className="max-w-5xl mx-auto">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-3xl font-bold text-white text-center mb-6"
+            >
+              Mission & Vision
+            </motion.h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-gray-800/50 rounded-xl p-6"
+              >
+                <h3 className="text-xl font-semibold text-blue-400 mb-2">Our Mission</h3>
+                <p className="text-gray-300">
+                  To empower businesses and creators worldwide with affordable, reliable, and
+                  beautiful digital products — delivered with flexible payment options and backed by
+                  a global network of talented developers.
+                </p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-gray-800/50 rounded-xl p-6"
+              >
+                <h3 className="text-xl font-semibold text-blue-400 mb-2">Our Vision</h3>
+                <p className="text-gray-300">
+                  To be the go‑to global platform for web and mobile templates and services — helping
+                  customers launch faster and helping developers reach clients everywhere.
+                </p>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -211,7 +219,7 @@ const About = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full font-semibold inline-flex items-center space-x-2 transition-colors duration-300"
-                  onClick={() => window.location.href = '/book-service'}
+                  onClick={() => window.location.href = '/contact'}
                 >
                   <span>Start Your Project</span>
                   <FiTarget className="w-5 h-5" />
