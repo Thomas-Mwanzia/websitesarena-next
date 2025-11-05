@@ -1,8 +1,5 @@
 // @ts-check
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-
 /** @type {import('next').NextConfig} */
 export default {
   // Disable production source maps to avoid shipping .map files to clients
@@ -26,34 +23,6 @@ export default {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
-
-  // Webpack hook: add client-side obfuscation in production if available
-  webpack: (config, { isServer, dev }) => {
-    let WebpackObfuscator = null;
-    try {
-      WebpackObfuscator = require('webpack-obfuscator');
-    } catch (e) {
-      WebpackObfuscator = null;
-    }
-
-    if (!dev && !isServer && WebpackObfuscator) {
-      config.plugins.push(
-        new WebpackObfuscator(
-          {
-            rotateStringArray: true,
-            stringArray: true,
-            stringArrayEncoding: ['rc4'],
-            compact: true,
-            controlFlowFlattening: false,
-          },
-          []
-        )
-      );
-    }
-
-    return config;
-  },
-
   // Enable static export if needed
   // output: 'export',
   
