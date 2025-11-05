@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .interactive-element { transition: all 0.3s ease; cursor: pointer; }
+      .interactive-element:hover { filter: brightness(1.2); transform: scale(1.05); }
+      .pulse-circle { animation: pulseAnim 2s infinite; }
+      @keyframes pulseAnim {
+        0% { r: 4; opacity: 1; }
+        70% { r: 8; opacity: 0; }
+        100% { r: 4; opacity: 0; }
+      }
+      .heart-beat { animation: beatAnim 1.5s ease infinite; }
+      @keyframes beatAnim {
+        0% { transform: scale(1); }
+        15% { transform: scale(1.2); }
+        30% { transform: scale(1); }
+        45% { transform: scale(1.15); }
+        60% { transform: scale(1); }
+      }
+    </style>
+    <linearGradient id="healthGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0EA5E9;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#38BDF8;stop-opacity:0.1"/>
+    </linearGradient>
+    <filter id="healthShadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.2"/>
+    </filter>
+    <pattern id="gridPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#3B82F6" stroke-width="0.5" opacity="0.2"/>
+    </pattern>
+  </defs>
+
+  <!-- Background with Grid -->
+  <rect width="800" height="600" fill="#1F2937"/>
+  <rect width="800" height="600" fill="url(#gridPattern)"/>
+
+  <!-- Appointment Booking Section -->
+  <g transform="translate(40, 40) skewY(-5)" filter="url(#healthShadow)">
+    <rect width="480" height="280" rx="16" fill="#374151" stroke="#38BDF8" stroke-width="2" class="interactive-element"/>
+    
+    <!-- Calendar -->
+    <g transform="translate(40, 40)">
+      <rect width="280" height="200" rx="8" fill="#1F2937" class="interactive-element"/>
+      <text x="20" y="40" fill="#E5E7EB" font-size="16">Available Slots</text>
+      <!-- Interactive Time Slots -->
+      <g transform="translate(20, 60)">
+        <rect width="60" height="30" rx="4" fill="#3B82F6" class="interactive-element"/>
+        <text x="15" y="20" fill="white" font-size="12">9:00</text>
+      </g>
+      <g transform="translate(90, 60)">
+        <rect width="60" height="30" rx="4" fill="#3B82F6" class="interactive-element"/>
+        <text x="15" y="20" fill="white" font-size="12">10:30</text>
+      </g>
+    </g>
+
+    <!-- Stats with Animation -->
+    <g transform="translate(360, 40)">
+      <circle cx="60" cy="60" r="40" fill="#3B82F6" class="heart-beat"/>
+      <text x="40" y="65" fill="white" font-size="14">98%</text>
+      <text x="20" y="85" fill="#E5E7EB" font-size="12">Success Rate</text>
+    </g>
+  </g>
+
+  <!-- Doctor Profiles with 3D Effect -->
+  <g transform="translate(40, 340)" filter="url(#healthShadow)">
+    <rect width="480" height="220" rx="16" fill="#374151" class="interactive-element"/>
+    
+    <!-- Doctor Cards -->
+    <g transform="translate(20, 20)">
+      <g transform="translate(0, 0)" class="interactive-element">
+        <rect width="140" height="180" rx="8" fill="#1F2937"/>
+        <circle cx="70" cy="60" r="30" fill="#3B82F6"/>
+        <circle cx="70" cy="60" r="4" fill="#60A5FA" class="pulse-circle"/>
+        <text x="50" y="120" fill="#E5E7EB" font-size="14">Dr. Smith</text>
+      </g>
+      
+      <g transform="translate(160, 0)" class="interactive-element">
+        <rect width="140" height="180" rx="8" fill="#1F2937"/>
+        <circle cx="70" cy="60" r="30" fill="#3B82F6"/>
+        <circle cx="70" cy="60" r="4" fill="#60A5FA" class="pulse-circle"/>
+        <text x="50" y="120" fill="#E5E7EB" font-size="14">Dr. Jones</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Patient Portal with Interactive Elements -->
+  <g transform="translate(540, 40)" filter="url(#healthShadow)">
+    <rect width="220" height="520" rx="16" fill="#374151" class="interactive-element"/>
+    
+    <!-- Profile Section -->
+    <g transform="translate(20, 20)">
+      <rect width="180" height="120" rx="8" fill="#1F2937" class="interactive-element"/>
+      <circle cx="90" cy="40" r="20" fill="#3B82F6"/>
+      <text x="65" y="90" fill="#E5E7EB" font-size="14">My Profile</text>
+    </g>
+
+    <!-- Health Metrics -->
+    <g transform="translate(20, 160)">
+      <rect width="180" height="160" rx="8" fill="#1F2937" class="interactive-element"/>
+      <!-- Heart Rate Animation -->
+      <path d="M20,80 L40,80 L50,40 L60,120 L70,80 L90,80" 
+            stroke="#3B82F6" 
+            stroke-width="2" 
+            fill="none" 
+            class="heart-beat"/>
+    </g>
+  </g>
+</svg>

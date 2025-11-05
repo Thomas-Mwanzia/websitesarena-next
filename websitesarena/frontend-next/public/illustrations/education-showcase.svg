@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .hover-scale { transition: transform 0.3s ease; }
+      .hover-scale:hover { transform: scale(1.05); }
+      .progress-animate { animation: progress 2s infinite; }
+      @keyframes progress {
+        from { stroke-dashoffset: 100; }
+        to { stroke-dashoffset: 0; }
+      }
+      .float { animation: floating 3s ease-in-out infinite; }
+      @keyframes floating {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+      }
+    </style>
+    <linearGradient id="courseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:0.1"/>
+    </linearGradient>
+    <filter id="eduShadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#1F2937"/>
+
+  <!-- Course Dashboard -->
+  <g transform="translate(40, 40) skewY(-5)" filter="url(#eduShadow)">
+    <rect width="480" height="520" rx="16" fill="#374151" stroke="#6366F1" stroke-width="2"/>
+    
+    <!-- Progress Section -->
+    <g transform="translate(20, 20)" class="hover-scale">
+      <rect width="440" height="100" rx="8" fill="#1F2937"/>
+      <circle cx="60" cy="50" r="30" fill="none" stroke="#6366F1" stroke-width="4" 
+              stroke-dasharray="100" class="progress-animate"/>
+      <text x="120" y="45" fill="#E5E7EB" font-size="18">Course Progress</text>
+      <text x="120" y="70" fill="#6366F1" font-size="24">85%</text>
+    </g>
+
+    <!-- Current Lessons -->
+    <g transform="translate(20, 140)">
+      <rect width="440" height="160" rx="8" fill="#1F2937" class="hover-scale"/>
+      <!-- Interactive Lesson Cards -->
+      <g transform="translate(20, 20)">
+        <rect width="400" height="40" rx="4" fill="#4F46E5" class="hover-scale"/>
+        <text x="20" y="25" fill="white" font-size="14">Advanced Web Development</text>
+      </g>
+      <g transform="translate(20, 70)">
+        <rect width="400" height="40" rx="4" fill="#6366F1" class="hover-scale"/>
+        <text x="20" y="25" fill="white" font-size="14">UI/UX Design Principles</text>
+      </g>
+    </g>
+
+    <!-- Achievement Badges -->
+    <g transform="translate(20, 320)" class="float">
+      <rect width="440" height="180" rx="8" fill="#1F2937"/>
+      <!-- Interactive Badges -->
+      <g transform="translate(20, 20)">
+        <circle cx="40" cy="40" r="30" fill="#4F46E5" class="hover-scale"/>
+        <circle cx="120" cy="40" r="30" fill="#6366F1" class="hover-scale"/>
+        <circle cx="200" cy="40" r="30" fill="#818CF8" class="hover-scale"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Course Navigation -->
+  <g transform="translate(540, 40) skewY(-5)" filter="url(#eduShadow)">
+    <rect width="220" height="520" rx="16" fill="#374151" stroke="#6366F1" stroke-width="2"/>
+    
+    <!-- Course List -->
+    <g transform="translate(20, 20)">
+      <rect width="180" height="320" rx="8" fill="#1F2937"/>
+      <!-- Interactive Course Items -->
+      <g transform="translate(10, 20)" class="hover-scale">
+        <rect width="160" height="60" rx="4" fill="#4F46E5"/>
+        <text x="20" y="35" fill="white" font-size="14">Web Design</text>
+      </g>
+      <g transform="translate(10, 90)" class="hover-scale">
+        <rect width="160" height="60" rx="4" fill="#6366F1"/>
+        <text x="20" y="35" fill="white" font-size="14">JavaScript</text>
+      </g>
+    </g>
+
+    <!-- Calendar -->
+    <g transform="translate(20, 360)">
+      <rect width="180" height="140" rx="8" fill="#1F2937" class="hover-scale"/>
+      <text x="20" y="40" fill="#E5E7EB" font-size="16">Upcoming</text>
+      <circle cx="40" cy="80" r="4" fill="#6366F1" class="float"/>
+      <text x="60" y="85" fill="#E5E7EB" font-size="12">Next Session</text>
+    </g>
+  </g>
+</svg>

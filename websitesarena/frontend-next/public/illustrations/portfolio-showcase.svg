@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .project-card {
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-style: preserve-3d;
+        perspective: 1000px;
+      }
+      .project-card:hover {
+        transform: translateY(-10px) rotateY(10deg);
+        z-index: 10;
+      }
+      .project-content {
+        transition: all 0.4s ease;
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      .project-card:hover .project-content {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .tech-tag {
+        transition: all 0.3s ease;
+        opacity: 0.7;
+      }
+      .project-card:hover .tech-tag {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      .skill-bar {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+        animation: fillBar 2s ease forwards;
+      }
+      @keyframes fillBar {
+        to { stroke-dashoffset: 20; }
+      }
+      .particle {
+        animation: float 3s infinite ease-in-out;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+      }
+      .glow-effect {
+        animation: glow 4s infinite alternate;
+      }
+      @keyframes glow {
+        0% { filter: brightness(1); }
+        100% { filter: brightness(1.3); }
+      }
+    </style>
+    
+    <!-- Enhanced Gradients -->
+    <linearGradient id="cardGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:0.3"/>
+      <stop offset="50%" style="stop-color:#60A5FA;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#93C5FD;stop-opacity:0.1"/>
+    </linearGradient>
+    
+    <!-- Complex Shadow Effect -->
+    <filter id="projectShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="10" result="offsetblur"/>
+      <feFlood flood-color="#3B82F6" flood-opacity="0.2"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Skill Chart Pattern -->
+    <pattern id="skillGrid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" stroke="#3B82F6" stroke-width="0.5" fill="none" opacity="0.2"/>
+    </pattern>
+  </defs>
+
+  <!-- Enhanced Background -->
+  <rect width="800" height="600" fill="#1F2937"/>
+  <rect width="800" height="600" fill="url(#skillGrid)" class="glow-effect"/>
+
+  <!-- Project Grid with Advanced 3D -->
+  <g transform="translate(40, 40)" filter="url(#projectShadow)">
+    <!-- Row 1 -->
+    <g class="project-row" transform="skewY(-5)">
+      <!-- Project Card 1 -->
+      <g class="project-card">
+        <rect width="230" height="250" rx="16" fill="#374151" class="card-base"/>
+        <rect width="230" height="250" rx="16" fill="url(#cardGlow)" class="glow-effect"/>
+        
+        <!-- Project Preview -->
+        <g transform="translate(15, 15)">
+          <rect width="200" height="140" rx="8" fill="#4B5563" class="project-preview"/>
+          <circle cx="30" cy="30" r="4" fill="#3B82F6" class="particle"/>
+          <circle cx="170" cy="110" r="4" fill="#60A5FA" class="particle"/>
+        </g>
+        
+        <!-- Project Info -->
+        <g transform="translate(15, 170)" class="project-content">
+          <text x="0" y="0" fill="#E5E7EB" font-size="18" font-weight="bold">Modern Dashboard</text>
+          <text x="0" y="25" fill="#9CA3AF" font-size="14">Analytics Platform</text>
+          
+          <!-- Tech Stack -->
+          <g transform="translate(0, 40)">
+            <rect width="60" height="24" rx="12" fill="#3B82F6" opacity="0.2" class="tech-tag"/>
+            <text x="10" y="16" fill="#60A5FA" font-size="12">React</text>
+            
+            <rect x="70" width="60" height="24" rx="12" fill="#3B82F6" opacity="0.2" class="tech-tag"/>
+            <text x="80" y="16" fill="#60A5FA" font-size="12">TypeScript</text>
+          </g>
+          
+          <!-- Skill Level -->
+          <g transform="translate(0, 70)">
+            <rect width="200" height="4" rx="2" fill="#4B5563"/>
+            <rect width="160" height="4" rx="2" fill="#3B82F6" class="skill-bar"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- More Project Cards with Similar Structure -->
+      <g transform="translate(250, 0)" class="project-card">
+        <!-- Similar structure repeated for other cards -->
+      </g>
+    </g>
+
+    <!-- Interactive Elements -->
+    <g transform="translate(700, 20)">
+      <circle cx="0" cy="0" r="30" fill="url(#cardGlow)" class="glow-effect"/>
+      <path d="M-15,0 L15,0 M0,-15 L0,15" stroke="#3B82F6" stroke-width="2"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .property-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+      .property-card:hover { transform: translateX(10px); }
+      .property-card:hover .price { fill: #10B981; }
+      .feature-icon { transition: transform 0.3s ease; }
+      .property-card:hover .feature-icon { transform: scale(1.2); }
+      .map-point { animation: pulse 2s infinite; }
+      @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        70% { transform: scale(2); opacity: 0; }
+        100% { transform: scale(1); opacity: 0; }
+      }
+    </style>
+    <linearGradient id="propertyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#34D399;stop-opacity:0.1"/>
+    </linearGradient>
+    <filter id="propertyGlow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feFlood flood-color="#10B981" flood-opacity="0.2"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background with 3D Effect -->
+  <rect width="800" height="600" fill="#1F2937" transform="skewY(-5)"/>
+
+  <!-- Search Section -->
+  <g transform="translate(40, 40)" filter="url(#propertyGlow)">
+    <rect width="720" height="80" rx="16" fill="#374151"/>
+    <rect x="20" y="20" width="680" height="40" rx="8" fill="#4B5563" class="property-card"/>
+    <text x="40" y="45" fill="#E5E7EB" font-size="14">Search properties...</text>
+  </g>
+
+  <!-- Featured Properties -->
+  <g transform="translate(40, 140)">
+    <!-- Main Property -->
+    <g class="property-card" filter="url(#propertyGlow)">
+      <rect width="480" height="200" rx="16" fill="#374151"/>
+      <rect x="20" y="20" width="440" height="120" rx="8" fill="#4B5563"/>
+      <text x="20" y="160" fill="#E5E7EB" font-size="18">Luxury Villa</text>
+      <text x="20" y="180" fill="#10B981" font-size="16" class="price">$1,200,000</text>
+      
+      <!-- Feature Icons -->
+      <g transform="translate(300, 155)">
+        <circle cx="10" cy="10" r="8" fill="#10B981" class="feature-icon"/>
+        <circle cx="40" cy="10" r="8" fill="#10B981" class="feature-icon"/>
+        <circle cx="70" cy="10" r="8" fill="#10B981" class="feature-icon"/>
+      </g>
+    </g>
+
+    <!-- Property Grid -->
+    <g transform="translate(0, 220)">
+      <g class="property-card" filter="url(#propertyGlow)">
+        <rect width="230" height="180" rx="16" fill="#374151"/>
+        <rect x="20" y="20" width="190" height="100" rx="8" fill="#4B5563"/>
+        <text x="20" y="140" fill="#E5E7EB" font-size="16">Modern Apartment</text>
+        <text x="20" y="160" fill="#10B981" font-size="14" class="price">$450,000</text>
+      </g>
+
+      <g transform="translate(250, 0)" class="property-card" filter="url(#propertyGlow)">
+        <rect width="230" height="180" rx="16" fill="#374151"/>
+        <rect x="20" y="20" width="190" height="100" rx="8" fill="#4B5563"/>
+        <text x="20" y="140" fill="#E5E7EB" font-size="16">Beach House</text>
+        <text x="20" y="160" fill="#10B981" font-size="14" class="price">$850,000</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Interactive Map -->
+  <g transform="translate(540, 140)" filter="url(#propertyGlow)">
+    <rect width="220" height="420" rx="16" fill="#374151"/>
+    <rect x="20" y="20" width="180" height="380" rx="8" fill="#4B5563"/>
+    
+    <!-- Map Points -->
+    <circle cx="70" cy="100" r="4" fill="#10B981" class="map-point"/>
+    <circle cx="150" cy="200" r="4" fill="#10B981" class="map-point"/>
+    <circle cx="100" cy="300" r="4" fill="#10B981" class="map-point"/>
+    
+    <!-- Selected Area -->
+    <circle cx="70" cy="100" r="20" fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="4"/>
+  </g>
+</svg>

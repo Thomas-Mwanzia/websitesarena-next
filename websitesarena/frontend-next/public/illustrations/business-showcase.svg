@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .interactive-card { transition: transform 0.3s ease; cursor: pointer; }
+      .interactive-card:hover { transform: translateY(-5px); }
+      .stat-number { font-family: 'Arial', sans-serif; font-weight: bold; }
+      .animate-pulse { animation: pulse 2s infinite; }
+      @keyframes pulse {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+      }
+    </style>
+    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563EB;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:0.1"/>
+    </linearGradient>
+    <filter id="cardShadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.3"/>
+    </filter>
+    <filter id="neonGlow">
+      <feFlood flood-color="#3B82F6" flood-opacity="0.3" result="flood"/>
+      <feComposite operator="in" in="flood" in2="SourceGraphic"/>
+      <feGaussianBlur stdDeviation="4"/>
+      <feComposite operator="over" in="SourceGraphic"/>
+    </filter>
+  </defs>
+
+  <!-- 3D Background -->
+  <rect width="800" height="600" fill="url(#heroGradient)" transform="skewY(-5)"/>
+
+  <!-- Hero Section -->
+  <g transform="translate(40, 40)" class="interactive-card" filter="url(#cardShadow)">
+    <rect width="720" height="200" rx="16" fill="#1F2937" stroke="#3B82F6" stroke-width="2"/>
+    <text x="60" y="100" class="stat-number" fill="#60A5FA" font-size="32">Business Analytics</text>
+    <g transform="translate(440, 40)" class="animate-pulse">
+      <path d="M0,80 L60,40 L120,60 L180,20" stroke="#3B82F6" stroke-width="3" fill="none"/>
+      <circle cx="180" cy="20" r="6" fill="#60A5FA"/>
+    </g>
+  </g>
+
+  <!-- Service Cards with 3D Effect -->
+  <g transform="translate(40, 260)" filter="url(#neonGlow)">
+    <!-- Service Card 1 -->
+    <g transform="translate(0, 0)" class="interactive-card">
+      <rect width="220" height="160" rx="12" fill="#374151" stroke="#4B5563" stroke-width="2"/>
+      <circle cx="110" cy="60" r="30" fill="#3B82F6" class="animate-pulse"/>
+      <text x="80" y="120" class="stat-number" fill="#E5E7EB" font-size="14">Strategy</text>
+    </g>
+
+    <!-- Service Card 2 -->
+    <g transform="translate(250, -10)" class="interactive-card">
+      <rect width="220" height="160" rx="12" fill="#374151" stroke="#4B5563" stroke-width="2"/>
+      <circle cx="110" cy="60" r="30" fill="#3B82F6" class="animate-pulse"/>
+      <text x="80" y="120" class="stat-number" fill="#E5E7EB" font-size="14">Innovation</text>
+    </g>
+
+    <!-- Service Card 3 -->
+    <g transform="translate(500, -20)" class="interactive-card">
+      <rect width="220" height="160" rx="12" fill="#374151" stroke="#4B5563" stroke-width="2"/>
+      <circle cx="110" cy="60" r="30" fill="#3B82F6" class="animate-pulse"/>
+      <text x="80" y="120" class="stat-number" fill="#E5E7EB" font-size="14">Growth</text>
+    </g>
+  </g>
+
+  <!-- Stats Section with Interactive Elements -->
+  <g transform="translate(40, 440)">
+    <g transform="skewY(-5)" filter="url(#cardShadow)">
+      <rect width="720" height="120" rx="12" fill="#1F2937" stroke="#3B82F6" stroke-width="2"/>
+      <g class="interactive-card">
+        <text x="60" y="50" class="stat-number animate-pulse" fill="#60A5FA" font-size="24">98%</text>
+        <text x="60" y="80" fill="#E5E7EB" font-size="14">Success Rate</text>
+      </g>
+      <g class="interactive-card" transform="translate(240, 0)">
+        <text x="60" y="50" class="stat-number animate-pulse" fill="#60A5FA" font-size="24">500+</text>
+        <text x="60" y="80" fill="#E5E7EB" font-size="14">Projects</text>
+      </g>
+      <g class="interactive-card" transform="translate(480, 0)">
+        <text x="60" y="50" class="stat-number animate-pulse" fill="#60A5FA" font-size="24">24/7</text>
+        <text x="60" y="80" fill="#E5E7EB" font-size="14">Support</text>
+      </g>
+    </g>
+  </g>
+</svg>
