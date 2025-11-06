@@ -113,7 +113,7 @@ export default function ClientDashboard() {
                 <div className={`max-w-md w-full bg-gradient-to-r from-green-700 to-emerald-700 text-white rounded-xl shadow-lg p-4 flex items-start gap-4 border border-white/10`}>
                   <div className="flex-1">
                     <h4 className="text-lg font-bold">Welcome back, {displayName}!</h4>
-                    <p className="text-sm mt-1 text-green-100">We&apos;re excited to let you know we plan to automate parts of this dashboard by <strong>5th January 2026</strong> — making things faster and easier for you. Enjoy the preview and let us know what you want most!</p>
+                    <p className="text-sm mt-1 text-green-100">Thank you for choosing Websites Arena — we&apos;re excited to let you know we plan to automate parts of this dashboard by <strong>5th January 2026</strong> — making things faster and easier for you. Stick around for amazing upcoming services and enjoy the preview!</p>
                     <div className="mt-3 flex items-center gap-2">
                       <button
                         onClick={() => {
@@ -208,10 +208,10 @@ export default function ClientDashboard() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-900">
+    <div className="flex min-h-screen bg-gray-900 pt-20">
       {/* Sidebar */}
       <aside className={`${isSidebarOpen ? 'w-64' : 'w-16'} transition-all duration-300 bg-gray-800 border-r border-gray-700`}>
-        <div className="flex flex-col h-full">
+  <div className="flex flex-col h-full pt-6 lg:pt-8">
           <div className="flex items-center justify-between p-4">
             <h2 className={`text-white font-semibold ${!isSidebarOpen && 'hidden'}`}>Client Dashboard</h2>
             <button 
