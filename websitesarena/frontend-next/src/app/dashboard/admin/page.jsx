@@ -793,7 +793,7 @@ const Dashboard = () => {
   const handleStatusUpdate = async (id, status) => {
     try {
       toast.loading('Updating status...');
-      const response = await axios.patch(`${API_URL}/api/bookings/${id}/status`, { status });
+      const response = await api.patch(`/api/bookings/${id}/status`, { status });
       setBookings(prev => prev.map(b => b._id === id ? response.data.data : b));
       toast.dismiss();
       toast.success('Status updated successfully');
@@ -805,8 +805,7 @@ const Dashboard = () => {
   const handleMarkAsRead = async (id) => {
     try {
       const toastId = toast.loading('Updating message status...');
-      const response = await axios.patch(`${API_URL}/api/messages/${id}/status`
-, {
+      const response = await api.patch(`/api/messages/${id}/status`, {
         status: 'read'
       });
       setMessages(prev => prev.map(m => m._id === id ? response.data.data : m));
@@ -819,7 +818,7 @@ const Dashboard = () => {
   const handleMessageResponded = async (id) => {
     try {
       const toastId = toast.loading('Marking message as responded...');
-      const response = await axios.patch(`${API_URL}/api/messages/${id}/status`, {
+      const response = await api.patch(`/api/messages/${id}/status`, {
         status: 'responded'
       });
       setMessages(prev => prev.map(m => m._id === id ? response.data.data : m));
@@ -832,7 +831,7 @@ const Dashboard = () => {
   const handleMarkAttended = async (id, attended) => {
     try {
       toast.loading('Updating attended status...');
-      const response = await axios.patch(`${API_URL}/api/bookings/${id}/attended`, { attended: !attended });
+      const response = await api.patch(`/api/bookings/${id}/attended`, { attended: !attended });
       setBookings(prev => prev.map(b => b._id === id ? response.data.data : b));
       toast.dismiss();
       toast.success(`Marked as ${!attended ? 'attended' : 'not attended'}`);
@@ -1186,7 +1185,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
       setChatMessages(res.data.data || []);
       
       // Mark messages as read
-      await axios.patch(`${API_URL}/api/chats/read/${developerEmail}`);
+      await api.patch(`/api/chats/read/${developerEmail}`);
       setUnreadCounts(prev => ({
         ...prev,
         [developerEmail]: 0
@@ -1236,7 +1235,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
     if (!newText || newText === currentText) return;
 
     try {
-      const res = await axios.patch(`/api/chats/${messageId}`, {
+      const res = await api.patch(`/api/chats/${messageId}`, {
         message: newText
       });
       setChatMessages(messages => 
@@ -1251,7 +1250,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
     if (!confirm('Delete this message?')) return;
 
     try {
-  await axios.delete(`/api/chats/${messageId}`);
+  await api.delete(`/api/chats/${messageId}`);
       setChatMessages(messages => messages.filter(msg => msg._id !== messageId));
     } catch (error) {
       console.error('Error deleting message:', error);
@@ -1313,7 +1312,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
   // Update markAsRead function to include admin flag
   const markAsRead = async (messageId) => {
     try {
-      const res = await axios.patch(`${API_URL}/api/chats/${messageId}/read?isAdmin=true`);
+      const res = await api.patch(`/api/chats/${messageId}/read?isAdmin=true`);
       setChatMessages(messages =>
         messages.map(msg =>
           msg._id === messageId ? { ...msg, adminRead: true, adminReadAt: new Date() } : msg

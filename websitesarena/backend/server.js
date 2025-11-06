@@ -272,6 +272,17 @@ const teamSchema = new mongoose.Schema({
 });
 const Team = mongoose.model('Team', teamSchema);
 
+// --- Visit Schema (for custom analytics) ---
+const visitSchema = new mongoose.Schema({
+  visitorId: String,       // opaque visitor id from cookie
+  path: String,            // page path
+  referrer: String,        // document.referrer
+  userAgent: String,       // user agent string
+  ip: String,              // remote IP
+  createdAt: { type: Date, default: Date.now }
+});
+const Visit = mongoose.model('Visit', visitSchema);
+
 // Authentication Middleware
 const auth = async (req, res, next) => {
   try {
@@ -1355,68 +1366,181 @@ app.get('/api/health/dns', async (req, res) => {
   res.json({ success: true, data: { daysLeft: 120, status: 'good', suggestion: 'DNS valid.' } });
 });
 
-// Analytics API Endpoints
+// Analytics API Endpoints (real aggregations from Visit collection)
+
+// Helper: simple UA parsing for device/browser classification
+function classifyDevice(userAgent) {
+  if (!userAgent) return 'Unknown';
+  const ua = userAgent.toLowerCase();
+  if (/tablet|ipad|playbook|silk/.test(ua)) return 'Tablet';
+  if (/mobi|iphone|android|ipod|phone/.test(ua)) return 'Mobile';
+  return 'Desktop';
+}
+
+function detectBrowser(userAgent) {
+  if (!userAgent) return 'Unknown';
+  const ua = userAgent;
+  if (/Edg\//.test(ua)) return 'Edge';
+  if (/OPR\//.test(ua) || /Opera\//.test(ua)) return 'Opera';
+  if (/Chrome\//.test(ua) && !/Chromium\//.test(ua)) return 'Chrome';
+  if (/CriOS\//.test(ua)) return 'Chrome';
+  if (/Firefox\//.test(ua)) return 'Firefox';
+  if (/Safari\//.test(ua) && !/Chrome\//.test(ua) && !/Chromium\//.test(ua)) return 'Safari';
+  return 'Other';
+}
+
+// Record a visit. Frontend should POST visitorId, path, referrer (optional).
+app.post('/api/visits', async (req, res) => {
+  try {
+    const { visitorId, path, referrer, userAgent } = req.body || {};
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || req.connection?.remoteAddress || '';
+    await Visit.create({ visitorId, path: path || req.path, referrer: referrer || req.get('referer') || '', userAgent: userAgent || req.get('user-agent') || '', ip });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Visit logging error:', error);
+    res.status(500).json({ success: false, message: 'Failed to record visit' });
+  }
+});
+
+// Overview: unique daily reach for the last N days (default 7)
 app.get('/api/analytics/overview', async (req, res) => {
-  // TODO: Integrate with real analytics
-  res.json({ success: true, data: Array.from({ length: 7 }, (_, i) => ({ label: `Day ${i+1}`, reach: Math.floor(Math.random()*100+50) })) });
+  try {
+    const days = parseInt(req.query.days) || 7;
+    const start = new Date();
+    start.setDate(start.getDate() - (days - 1));
+
+    const pipeline = [
+      { $match: { createdAt: { $gte: start } } },
+      { $project: { day: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }, visitorKey: { $ifNull: ['$visitorId', '$ip'] } } },
+      { $group: { _id: '$day', uniqueVisitors: { $addToSet: '$visitorKey' } } },
+      { $project: { day: '$_id', reach: { $size: '$uniqueVisitors' } } },
+      { $sort: { day: 1 } }
+    ];
+
+    const rows = await Visit.aggregate(pipeline);
+
+    // Ensure we return an entry for each day in range (even 0s)
+    const map = new Map(rows.map(r => [r.day, r.reach]));
+    const result = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const label = d.toISOString().slice(0, 10);
+      result.push({ label, reach: map.get(label) || 0 });
+    }
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error('Overview analytics error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
-app.get('/api/analytics/demographics', async (req, res) => {
-  // TODO: Integrate with real analytics
-  res.json({ success: true, data: [
-    { country: 'Kenya', users: 120 },
-    { country: 'USA', users: 80 },
-    { country: 'UK', users: 60 }
-  ] });
-});
-
-app.get('/api/analytics/devices', async (req, res) => {
-  // TODO: Integrate with real analytics
-  res.json({ success: true, data: [
-    { type: 'Mobile', users: 150 },
-    { type: 'Desktop', users: 90 },
-    { type: 'Tablet', users: 20 }
-  ] });
-});
-
-app.get('/api/analytics/browsers', async (req, res) => {
-  // TODO: Integrate with real analytics
-  res.json({ success: true, data: [
-    { name: 'Chrome', users: 120 },
-    { name: 'Safari', users: 60 },
-    { name: 'Firefox', users: 40 }
-  ] });
-});
-
-app.get('/api/analytics/sources', async (req, res) => {
-  // TODO: Integrate with real analytics
-  res.json({ success: true, data: [
-    { source: 'Direct', value: 100 },
-    { source: 'Referral', value: 60 },
-    { source: 'Organic', value: 80 },
-    { source: 'Social', value: 20 }
-  ] });
-});
-
+// Pages: top pages by views and unique visitors
 app.get('/api/analytics/pages', async (req, res) => {
-  // TODO: Integrate with real analytics
-  res.json({ success: true, data: [
-    { page: '/home', views: 120 },
-    { page: '/book-service', views: 80 },
-    { page: '/contact', views: 60 }
-  ] });
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    const pipeline = [
+      { $project: { path: 1, visitorKey: { $ifNull: ['$visitorId', '$ip'] } } },
+      { $group: { _id: '$path', views: { $sum: 1 }, visitors: { $addToSet: '$visitorKey' } } },
+      { $project: { page: '$_id', views: 1, uniqueVisitors: { $size: '$visitors' } } },
+      { $sort: { views: -1 } },
+      { $limit: limit }
+    ];
+    const rows = await Visit.aggregate(pipeline);
+    res.json({ success: true, data: rows });
+  } catch (error) {
+    console.error('Pages analytics error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
+// Devices: breakdown by Mobile/Desktop/Tablet (by hits)
+app.get('/api/analytics/devices', async (req, res) => {
+  try {
+    const rows = await Visit.find().select('userAgent').lean();
+    const counts = { Mobile: 0, Desktop: 0, Tablet: 0, Unknown: 0 };
+    rows.forEach(r => counts[classifyDevice(r.userAgent) || 'Unknown']++);
+    const data = Object.entries(counts).map(([type, users]) => ({ type, users }));
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Devices analytics error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Browsers: simple classification
+app.get('/api/analytics/browsers', async (req, res) => {
+  try {
+    const rows = await Visit.find().select('userAgent').lean();
+    const counts = {};
+    rows.forEach(r => {
+      const b = detectBrowser(r.userAgent);
+      counts[b] = (counts[b] || 0) + 1;
+    });
+    const data = Object.entries(counts).map(([name, users]) => ({ name, users })).sort((a, b) => b.users - a.users);
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Browsers analytics error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Sources: Direct, Search, Social, Referral
+app.get('/api/analytics/sources', async (req, res) => {
+  try {
+    const rows = await Visit.find().select('referrer').lean();
+    const counts = { Direct: 0, Search: 0, Social: 0, Referral: 0, Other: 0 };
+    const searchEngines = [/google\./i, /bing\./i, /yahoo\./i, /duckduckgo\./i];
+    const socialHosts = [/facebook\./i, /twitter\./i, /t\.co/i, /instagram\./i, /linkedin\./i, /pinterest\./i];
+    rows.forEach(r => {
+      const ref = r.referrer || '';
+      if (!ref) { counts.Direct++; return; }
+      if (searchEngines.some(re => re.test(ref))) { counts.Search++; return; }
+      if (socialHosts.some(re => re.test(ref))) { counts.Social++; return; }
+      counts.Referral++;
+    });
+    const data = Object.entries(counts).map(([source, value]) => ({ source, value }));
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Sources analytics error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Engagement: simple metrics computed from visits
 app.get('/api/analytics/engagement', async (req, res) => {
-  // TODO: Integrate with real analytics
-  res.json({ success: true, data: {
-    bounce: 42,
-    session: 2.5,
-    conversions: [
-      { type: 'Booking', count: 12 },
-      { type: 'Contact', count: 8 }
-    ]
-  }});
+  try {
+    const days = parseInt(req.query.days) || 7;
+    const start = new Date();
+    start.setDate(start.getDate() - (days - 1));
+
+    // total views
+    const totalViews = await Visit.countDocuments({ createdAt: { $gte: start } });
+
+    // unique visitors
+    const uniqueVisitors = await Visit.aggregate([
+      { $match: { createdAt: { $gte: start } } },
+      { $group: { _id: { $ifNull: ['$visitorId', '$ip'] } } },
+      { $count: 'count' }
+    ]);
+    const visitorsCount = (uniqueVisitors[0] && uniqueVisitors[0].count) || 0;
+
+    // pages per visitor (approx)
+    const pagesPerVisitor = visitorsCount ? +(totalViews / visitorsCount).toFixed(2) : 0;
+
+    // bounce: percent of visitors with only 1 hit in period
+    const bounceAgg = await Visit.aggregate([
+      { $match: { createdAt: { $gte: start } } },
+      { $group: { _id: { $ifNull: ['$visitorId', '$ip'] }, hits: { $sum: 1 } } },
+      { $group: { _id: null, singlePageVisitors: { $sum: { $cond: [{ $eq: ['$hits', 1] }, 1, 0] } }, totalVisitors: { $sum: 1 } } }
+    ]);
+    const bounceData = (bounceAgg[0] && bounceAgg[0].totalVisitors) ? Math.round((bounceAgg[0].singlePageVisitors / bounceAgg[0].totalVisitors) * 100) : 0;
+
+    res.json({ success: true, data: { bounce: bounceData, pagesPerVisitor, uniqueVisitors: visitorsCount, totalViews } });
+  } catch (error) {
+    console.error('Engagement analytics error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
 // MongoDB Atlas connection
@@ -1426,8 +1550,20 @@ mongoose
     useUnifiedTopology: true,
     dbName: 'websitesarena',
   })
-  .then(() => {
+  .then(async () => {
     console.log('Connected to MongoDB Atlas');
+    // Ensure indexes for analytics performance
+    try {
+      // create single-field indexes and a compound index helpful for aggregations
+      await Visit.collection.createIndex({ createdAt: 1 });
+      await Visit.collection.createIndex({ path: 1 });
+      await Visit.collection.createIndex({ visitorId: 1 });
+      await Visit.collection.createIndex({ visitorId: 1, createdAt: 1 });
+      console.log('Visit collection indexes ensured');
+    } catch (idxErr) {
+      console.warn('Failed to create Visit indexes:', idxErr.message || idxErr);
+    }
+
     const port = process.env.PORT;
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
