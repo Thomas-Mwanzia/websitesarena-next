@@ -158,11 +158,14 @@ export default function Navbar() {
                   href={item.href}
                   className={`text-xs font-semibold leading-5 transition-all duration-300 relative group px-2 py-1 rounded-lg ${
                     isActivePath(item.href)
-                      ? "text-white bg-blue-600/10"
-                      : "text-gray-300 hover:text-white"
+                      ? "text-white bg-blue-600 shadow-md shadow-blue-500/20"
+                      : "text-gray-300 hover:text-white hover:bg-blue-600/10"
                   }`}
                 >
                   {item.name}
+                  {isActivePath(item.href) && (
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full transform scale-x-100"></span>
+                  )}
                 </Link>
               )}
             </div>
@@ -285,7 +288,11 @@ export default function Navbar() {
                   ) : (
                     <Link
                       href={item.href}
-                      className="block rounded-lg px-2 py-2 text-sm font-semibold text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                      className={`block rounded-lg px-2 py-2 text-sm font-semibold transition-colors relative ${
+                        isActivePath(item.href)
+                          ? "text-white bg-blue-600/20 border-l-4 border-blue-500"
+                          : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                      }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {item.name}
