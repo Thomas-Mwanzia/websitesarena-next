@@ -2,22 +2,21 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import VisitTracker from '@/components/VisitTracker';
 import RootClient from '@/components/RootClient';
-import LayoutWrapper from '@/components/LayoutWrapper';
+import ClientLayout from '@/components/ClientLayout';
 
 export default function RootLayout({ children }) {
-  // Root layout is intentionally a server-rendered shell. Navbar/Footer are
-  // rendered here so they are present in the server HTML for non-dashboard
-  // pages. Any dashboard-only client logic lives inside the dashboard layout.
+  // Root layout is intentionally a server-rendered shell
+  // Any dashboard-only client logic lives inside the dashboard layout
 
   return (
     <html lang="en">
       <body className="bg-gray-900 text-white">
-        <LayoutWrapper>
+        <ClientLayout>
           <VisitTracker />
           <RootClient>
             <main>{children}</main>
           </RootClient>
-        </LayoutWrapper>
+        </ClientLayout>
         {/* Beautiful dark-themed toast notifications */}
         <Toaster
           position="center-top"
