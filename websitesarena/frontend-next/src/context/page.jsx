@@ -63,8 +63,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    // Clear all auth tokens
     localStorage.removeItem('token');
-      delete api.defaults.headers.common['Authorization'];
+    localStorage.removeItem('admin_token');
+    localStorage.removeItem('developer_token');
+    localStorage.removeItem('adminEmail');
+    localStorage.removeItem('adminName');
+    delete api.defaults.headers.common['Authorization'];
     setIsAuthenticated(false);
     setIsAdmin(false);
     setUser(null);

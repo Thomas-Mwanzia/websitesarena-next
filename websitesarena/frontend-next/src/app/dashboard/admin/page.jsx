@@ -4,14 +4,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '../../utils/axios';
 import toast from 'react-hot-toast';
-
-// Force redirect if no token on load/back navigation
-if (typeof window !== 'undefined') {
-  const token = localStorage?.getItem('developer_token');
-  if (!token) {
-    window.location.replace('/signin');
-  }
-}
 import Head from "next/head";
 import { useAuth } from '@/context/page';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
@@ -98,6 +90,17 @@ const Dashboard = () => {
   const [messages, setMessages] = useState([]);
   const [careers, setCareers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { logout } = useAuth();
+  
+  // Check admin auth on mount and redirect if no token
+  useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage?.getItem('admin_token') : null;
+    if (!token) {
+      router.replace('/signin');
+    }
+  }, [router]);
+  // Admin auth check effect already implemented above
   const [emailLoading, setEmailLoading] = useState(false);
   const [emailLogsLoading, setEmailLogsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
@@ -156,8 +159,6 @@ const Dashboard = () => {
     phone: '',
     message: ''
   });
-  const router = useRouter();
-  const { logout } = useAuth();
 
   // Email sending state
   const [emailForm, setEmailForm] = useState({
@@ -1375,7 +1376,11 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
           <div className="ml-4 mt-6">
             <button
               onClick={() => { 
+                // Clear all tokens and force redirect to signin
                 logout(); 
+                localStorage.removeItem('admin_token');  // Extra safety: ensure admin token is cleared
+                localStorage.removeItem('adminEmail');
+                localStorage.removeItem('adminName');
                 router.replace('/signin');
                 window.location.replace('/signin');
               }}

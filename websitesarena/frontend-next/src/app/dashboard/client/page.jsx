@@ -69,16 +69,14 @@ export default function ClientDashboard() {
     }
   }, [isSidebarOpen]);
 
-  useEffect(() => {
-    const wishes = [
-      "Empowering Your Digital Journey!",
-      "Welcome back!",
-      "Making your dreams digital!",
-      "Your success is our priority!",
-      "Together we build the future!"
-    ];
-    setSuccessWish(wishes[Math.floor(Math.random() * wishes.length)]);
-  }, []); // Only run once when component mounts
+  // Move the wishes into the fetchProfile to show only once
+  const wishes = [
+    "Empowering Your Digital Journey!",
+    "Welcome back!",
+    "Making your dreams digital!",
+    "Your success is our priority!",
+    "Together we build the future!"
+  ];
 
   // Add function to get greeting based on time
   const getGreeting = () => {
@@ -93,10 +91,13 @@ export default function ClientDashboard() {
       try {
         const res = await axios.get(`${apiUrl}/api/users/me`);
         if (res.data.success) {
+          // Set random success wish
+          setSuccessWish(wishes[Math.floor(Math.random() * wishes.length)]);
+          
           // Check if user is a client (server stores clients as role 'user')
-      if (res.data.data.role !== 'user') {
-        router.replace(ROUTES.CLIENT_AUTH);
-        return;
+          if (res.data.data.role !== 'user') {
+            router.replace(ROUTES.CLIENT_AUTH);
+            return;
           }
           
           setUser(res.data.data);
@@ -109,17 +110,17 @@ export default function ClientDashboard() {
             if (!dismissed) {
               const displayName = res.data.data.name || 'Client';
               toast.custom((t) => (
-                <div className={`max-w-md w-full bg-gradient-to-r from-blue-700 to-purple-700 text-white rounded-xl shadow-lg p-4 flex items-start gap-4 border border-white/10`}>
+                <div className={`max-w-md w-full bg-gradient-to-r from-green-700 to-emerald-700 text-white rounded-xl shadow-lg p-4 flex items-start gap-4 border border-white/10`}>
                   <div className="flex-1">
                     <h4 className="text-lg font-bold">Welcome back, {displayName}!</h4>
-                    <p className="text-sm mt-1 text-blue-100">We&apos;re excited to let you know we plan to automate parts of this dashboard by <strong>5th January 2025</strong> — making things faster and easier for you. Enjoy the preview and let us know what you want most!</p>
+                    <p className="text-sm mt-1 text-green-100">We&apos;re excited to let you know we plan to automate parts of this dashboard by <strong>5th January 2026</strong> — making things faster and easier for you. Enjoy the preview and let us know what you want most!</p>
                     <div className="mt-3 flex items-center gap-2">
                       <button
                         onClick={() => {
                           try { localStorage.setItem('clientWelcomeDismissed', '1'); } catch (e) {}
                           toast.dismiss(t.id);
                         }}
-                        className="px-3 py-1 rounded-md bg-white text-blue-700 font-semibold text-sm"
+                        className="px-3 py-1 rounded-md bg-white text-green-700 font-semibold text-sm"
                       >
                         Close
                       </button>
