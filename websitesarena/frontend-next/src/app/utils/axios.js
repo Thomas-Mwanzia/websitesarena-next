@@ -3,12 +3,17 @@ import ROUTES from './routes';
 
 // Create an axios instance with a base URL
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || '',
   headers: {
     'Content-Type': 'application/json',
   },
   withCredentials: true,
 });
+
+// Log warning if API URL is not set
+if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+  console.warn('Warning: NEXT_PUBLIC_API_BASE_URL is not set. API calls will use relative URLs.');
+}
 
 // Add request interceptor to include token
 api.interceptors.request.use(
