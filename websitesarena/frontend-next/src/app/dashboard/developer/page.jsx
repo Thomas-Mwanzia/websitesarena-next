@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from '@/app/utils/axios';
+import ROUTES from '@/app/utils/routes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
@@ -60,7 +61,19 @@ export default function DeveloperDashboard() {
   const [showDeveloperGuide, setShowDeveloperGuide] = useState(false); // Add this state
   const [showSidePanel, setShowSidePanel] = useState(false);  // Add this state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [sidebarTimer, setSidebarTimer] = useState(null);
   const [successWish, setSuccessWish] = useState("Happy coding!");
+
+  // Auto-collapse sidebar after 2 seconds when opened
+  useEffect(() => {
+    if (!isSidebarCollapsed) {
+      const timer = setTimeout(() => {
+        setIsSidebarCollapsed(true);
+      }, 2000);
+      setSidebarTimer(timer);
+      return () => clearTimeout(timer);
+    }
+  }, [isSidebarCollapsed]);
 
   useEffect(() => {
     const wishes = [
@@ -106,7 +119,7 @@ export default function DeveloperDashboard() {
     if (typeof window !== 'undefined') {
       const token = localStorage?.getItem('developer_token');
       if (!token) {
-        router.replace('/signin');
+        router.replace(ROUTES.SIGNIN);
       }
     }
   }, [router]);
@@ -717,14 +730,14 @@ const handleEditMessage = async (messageId, currentText) => {
           }`}
           onClick={() => {
             if (typeof window !== 'undefined') {
-              // Clear all developer-related localStorage to avoid leaking state between accounts
-              localStorage?.removeItem('developer_token');
-              localStorage?.removeItem('developerEmail');
-              localStorage?.removeItem('developerId');
-              localStorage?.removeItem('developerName');
-              localStorage?.removeItem('workingOnActivities');
-              router.push('/signin');
-            }
+                  // Clear all developer-related localStorage to avoid leaking state between accounts
+                  localStorage?.removeItem('developer_token');
+                  localStorage?.removeItem('developerEmail');
+                  localStorage?.removeItem('developerId');
+                  localStorage?.removeItem('developerName');
+                  localStorage?.removeItem('workingOnActivities');
+                  router.push(ROUTES.SIGNIN);
+                }
           }}
           title="Sign Out"
         >

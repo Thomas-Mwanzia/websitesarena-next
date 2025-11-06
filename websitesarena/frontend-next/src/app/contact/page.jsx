@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ContactForm from '@/components/ContactForm';
+import { FaWhatsapp } from 'react-icons/fa';
 const Contact = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 pt-24 pb-12">
@@ -37,15 +38,26 @@ const Contact = () => {
           </div>
           <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-gray-700">
             <h3 className="text-xl font-semibold text-blue-400 mb-2">Call Us</h3>
-            <a href="tel:+254115258685" className="text-gray-300 hover:text-blue-400 transition-colors">
-              +254115258685
-            </a>
+            <div className="space-y-2 flex flex-col items-center">
+              <div className="inline-flex items-center justify-center">
+                <FaWhatsapp className="w-5 h-5 text-green-500 mr-2" />
+                <a href="https://wa.me/254115258685" className="text-green-500 hover:text-green-400 transition-colors">
+                  +254 115 258 685
+                </a>
+              </div>
+              <a href="tel:+254731417662" className="text-gray-300 hover:text-blue-400 transition-colors">
+                +254 731 417 662
+              </a>
+              <a href="tel:+254716116173" className="text-gray-300 hover:text-blue-400 transition-colors">
+                +254 716 116 173
+              </a>
+            </div>
           </div>
           <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-gray-700">
             <h3 className="text-xl font-semibold text-blue-400 mb-2">Working Hours</h3>
             <p className="text-gray-300">
               Monday - Friday<br />
-              9:00 AM - 6:00 PM EST
+              9:00 AM - 6:00 PM EAT
             </p>
           </div>
         </motion.div>

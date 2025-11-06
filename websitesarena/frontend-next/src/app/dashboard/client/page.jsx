@@ -1,5 +1,13 @@
 "use client";
 
+// Force redirect if no token on load/back navigation
+if (typeof window !== 'undefined') {
+  const token = localStorage?.getItem('token');
+  if (!token) {
+    window.location.replace('/clientauth');
+  }
+}
+
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -16,12 +24,14 @@ import {
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 import axios from '@/app/utils/axios';
+import ROUTES from '@/app/utils/routes';
 import { toast } from 'react-hot-toast';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
 
 export default function ClientDashboard() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarTimer, setSidebarTimer] = useState(null);
   const [activeSection, setActiveSection] = useState('update-details');
   const [user, setUser] = useState(null);
   const [name, setName] = useState('');
@@ -29,7 +39,54 @@ export default function ClientDashboard() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [company, setCompany] = useState('');
+  const [successWish, setSuccessWish] = useState("Welcome!");
   const router = useRouter();
+
+  // Handle section changes including logout
+  const handleSectionChange = (sectionId) => {
+    if (sectionId === 'logout') {
+      if (typeof window !== 'undefined') {
+        // Clear client-related storage
+        localStorage?.removeItem('token');
+        localStorage?.removeItem('name');
+        localStorage?.removeItem('email');
+        router.replace('/clientauth');
+        window.location.replace('/clientauth');
+      }
+    } else {
+      setActiveSection(sectionId);
+    }
+  };
+
+  // Auto-close sidebar after 2 seconds
+  useEffect(() => {
+    if (isSidebarOpen) {
+      const timer = setTimeout(() => {
+        setSidebarOpen(false);
+      }, 2000);
+      setSidebarTimer(timer);
+      return () => clearTimeout(timer);
+    }
+  }, [isSidebarOpen]);
+
+  useEffect(() => {
+    const wishes = [
+      "Empowering Your Digital Journey!",
+      "Welcome back!",
+      "Making your dreams digital!",
+      "Your success is our priority!",
+      "Together we build the future!"
+    ];
+    setSuccessWish(wishes[Math.floor(Math.random() * wishes.length)]);
+  }, []); // Only run once when component mounts
+
+  // Add function to get greeting based on time
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -37,26 +94,54 @@ export default function ClientDashboard() {
         const res = await axios.get(`${apiUrl}/api/users/me`);
         if (res.data.success) {
           // Check if user is a client (server stores clients as role 'user')
-          if (res.data.data.role !== 'user') {
-            router.replace('/clientauth');
-            return;
+      if (res.data.data.role !== 'user') {
+        router.replace(ROUTES.CLIENT_AUTH);
+        return;
           }
           
           setUser(res.data.data);
           setName(res.data.data.name || '');
           setPhone(res.data.data.phone || '');
           setCompany(res.data.data.company || '');
+          // Show a persistent, personalized welcome toast unless dismissed
+          try {
+            const dismissed = typeof window !== 'undefined' ? localStorage.getItem('clientWelcomeDismissed') : null;
+            if (!dismissed) {
+              const displayName = res.data.data.name || 'Client';
+              toast.custom((t) => (
+                <div className={`max-w-md w-full bg-gradient-to-r from-blue-700 to-purple-700 text-white rounded-xl shadow-lg p-4 flex items-start gap-4 border border-white/10`}>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold">Welcome back, {displayName}!</h4>
+                    <p className="text-sm mt-1 text-blue-100">We&apos;re excited to let you know we plan to automate parts of this dashboard by <strong>5th January 2025</strong> — making things faster and easier for you. Enjoy the preview and let us know what you want most!</p>
+                    <div className="mt-3 flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          try { localStorage.setItem('clientWelcomeDismissed', '1'); } catch (e) {}
+                          toast.dismiss(t.id);
+                        }}
+                        className="px-3 py-1 rounded-md bg-white text-blue-700 font-semibold text-sm"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ), { duration: Infinity, position: 'top-right' });
+            }
+          } catch (e) {
+            // ignore localStorage errors
+          }
         }
       } catch (err) {
         console.error('Failed to fetch profile', err);
-        router.replace('/clientauth');
+  router.replace(ROUTES.CLIENT_AUTH);
       }
     };
     
     // Check for token first
     const token = localStorage.getItem('token');
     if (!token) {
-      router.replace('/clientauth');
+      router.replace(ROUTES.CLIENT_AUTH);
       return;
     }
     
@@ -104,7 +189,7 @@ export default function ClientDashboard() {
       if (res.data.success) {
         localStorage.removeItem('token');
         toast.success('Account successfully deleted');
-        router.push('/');
+  router.push(ROUTES.HOME);
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to delete account');
@@ -140,7 +225,7 @@ export default function ClientDashboard() {
             {navigationItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => setActiveSection(item.id)}
+                onClick={() => handleSectionChange(item.id)}
                 className={`w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors
                   ${activeSection === item.id 
                     ? 'bg-blue-600 text-white' 
@@ -172,7 +257,15 @@ export default function ClientDashboard() {
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
-        <div className="p-6">
+        <div className="p-8">
+          {/* Add greeting section */}
+          <div className="mb-8 bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6 border border-blue-700/30">
+            <h1 className="text-2xl font-bold text-white mb-2">
+              {getGreeting()}, {user?.name || 'Client'}!
+            </h1>
+            <p className="text-blue-300">{successWish}</p>
+          </div>
+
           <div className="bg-gray-800 rounded-xl p-6">
             {activeSection === 'update-details' && (
               <div className="space-y-6">

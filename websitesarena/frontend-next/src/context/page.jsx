@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '@/app/utils/axios';
+import ROUTES from '@/app/utils/routes';
 
 const AuthContext = createContext();
 
@@ -28,15 +29,15 @@ export const AuthProvider = ({ children }) => {
       setIsAdmin(response.data.isAdmin);
       
       // Redirect based on user type if on wrong dashboard
-      const path = window.location.pathname;
-      const isClientPath = path.startsWith('/dashboard/client');
-      const isDeveloperPath = path.startsWith('/dashboard/developer');
+  const path = window.location.pathname;
+  const isClientPath = path.startsWith(ROUTES.DASHBOARD_CLIENT);
+  const isDeveloperPath = path.startsWith(ROUTES.DASHBOARD_DEVELOPER);
       
       // server uses 'user' for clients and 'admin' for admins; developers are stored separately
       if (response.data.role === 'user' && isDeveloperPath) {
-        window.location.href = '/clientauth';
+        window.location.href = ROUTES.CLIENT_AUTH;
       } else if (response.data.role === 'developer' && isClientPath) {
-        window.location.href = '/signin';
+        window.location.href = ROUTES.SIGNIN;
       }
     } catch (error) {
       localStorage.removeItem('token');

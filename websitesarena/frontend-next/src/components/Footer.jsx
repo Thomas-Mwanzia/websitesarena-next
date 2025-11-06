@@ -1,9 +1,11 @@
 "use client";
 
 import React from 'react'
+import { usePathname } from 'next/navigation';
+import ROUTES from '@/app/utils/routes';
 import Link from 'next/link';
 import { 
-  FaInstagram, FaYoutube, FaTiktok 
+  FaInstagram, FaYoutube, FaTiktok, FaWhatsapp 
 } from 'react-icons/fa';
 
 const Footer = () => {
@@ -158,9 +160,14 @@ const Footer = () => {
                   </svg>
                   <div>
                     <span className="block text-sm font-medium">Phone:</span>
-                    <a href="tel:+254115258685" className="hover:text-blue-400">+254 115 258 685</a>
-                    <br/>
-                    <a href="tel:+254736671857" className="hover:text-blue-400">+254 736 671 857</a>
+                    <div className="flex items-center">
+                      <FaWhatsapp className="w-4 h-4 text-green-500 mr-2" />
+                      <a href="https://wa.me/254115258685" className="text-green-500 hover:text-green-400 transition-colors">
+                        +254 115 258 685
+                      </a>
+                    </div>
+                    <a href="tel:+254731417662" className="hover:text-blue-400 block pl-6">+254 731 417 662</a>
+                    <a href="tel:+254716116173" className="hover:text-blue-400 block pl-6">+254 716 116 173</a>
                   </div>
                 </div>
               </li>

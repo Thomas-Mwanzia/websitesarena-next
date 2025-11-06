@@ -1,8 +1,8 @@
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Toaster } from "react-hot-toast";
 import VisitTracker from '@/components/VisitTracker';
+import RootClient from '@/components/RootClient';
+import LayoutWrapper from '@/components/LayoutWrapper';
 
 export default function RootLayout({ children }) {
   // Root layout is intentionally a server-rendered shell. Navbar/Footer are
@@ -12,10 +12,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="bg-gray-900 text-white">
-        <Navbar />
-  <VisitTracker />
-        <main>{children}</main>
-        <Footer />
+        <LayoutWrapper>
+          <VisitTracker />
+          <RootClient>
+            <main>{children}</main>
+          </RootClient>
+        </LayoutWrapper>
         {/* Beautiful dark-themed toast notifications */}
         <Toaster
           position="center-top"

@@ -4,7 +4,16 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '../../utils/axios';
 import toast from 'react-hot-toast';
+
+// Force redirect if no token on load/back navigation
+if (typeof window !== 'undefined') {
+  const token = localStorage?.getItem('developer_token');
+  if (!token) {
+    window.location.replace('/signin');
+  }
+}
 import Head from "next/head";
+import { useAuth } from '@/context/page';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { FaCheckCircle, FaPaperPlane, FaEye } from 'react-icons/fa';
 // use the shared axios instance `api` for all requests (configured with interceptors)
@@ -148,6 +157,7 @@ const Dashboard = () => {
     message: ''
   });
   const router = useRouter();
+  const { logout } = useAuth();
 
   // Email sending state
   const [emailForm, setEmailForm] = useState({
@@ -1355,12 +1365,26 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
   <meta name="description" content="Admin dashboard for Quick Feet website" />
 </Head>
 
-<h1
-  style={{ fontFamily: "Cinzel, serif" }}
-  className="text-6xl text-gray-100 drop-shadow-sm bg-black/10 px-8 py-6 rounded-xl"
->
-  Quick Feet 🐾
-</h1>
+        <div className="flex items-start justify-between">
+          <h1
+            style={{ fontFamily: "Cinzel, serif" }}
+            className="text-6xl text-gray-100 drop-shadow-sm bg-black/10 px-8 py-6 rounded-xl"
+          >
+            Quick Feet 🐾
+          </h1>
+          <div className="ml-4 mt-6">
+            <button
+              onClick={() => { 
+                logout(); 
+                router.replace('/signin');
+                window.location.replace('/signin');
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
         
         <nav className="mb-8">
           <ul className="flex overflow-x-auto whitespace-nowrap space-x-2 sm:space-x-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
