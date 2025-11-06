@@ -2,9 +2,9 @@ import axios from 'axios';
 
 // Create an axios instance with a base URL
 const api = axios.create({
-  // Use NEXT_PUBLIC_API_URL for cross-origin or leave empty to use relative paths
+  // Use NEXT_PUBLIC_API_BASE_URL for cross-origin or leave empty to use relative paths
   // in production when frontend & backend are on the same origin.
-  baseURL: process.env.NEXT_PUBLIC_API_URL || '',
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || '',
   headers: {
     'Content-Type': 'application/json',
   },

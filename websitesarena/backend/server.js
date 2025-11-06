@@ -51,8 +51,7 @@ const validateInput = (schema) => {
 // Global Middleware
 app.use(requestLogger);
 app.use(cors({
-  // Prefer explicit CLIENT_URL in your environment. Default to localhost for dev.
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: process.env.CLIENT_URL,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -106,9 +105,7 @@ const rateLimit = (windowMs, max) => {
 // Apply rate limiting to all routes
 app.use(rateLimit(15 * 60 * 1000, 200)); // 200 requests per 15 minutes
 
-// API Version Prefix
-const API_VERSION = '/api/v1';
-
+// Remove API versioning
 
 
 // Resend configuration
@@ -371,7 +368,7 @@ app.get('/api/admin/logs', async (req, res) => {
  * @apiBody {String[]} technologies Project technologies
  * @apiSuccess {Object} data Created project
  */
-app.post(`${API_VERSION}/projects`, async (req, res) => { // Temporarily removed auth
+app.post('/api/projects', async (req, res) => { // Temporarily removed auth
   try {
     const { title, description, category, technologies, liveUrl, githubUrl, imageUrl } = req.body;
     
@@ -542,7 +539,7 @@ app.get('/api/feedback', async (req, res) => {
 });
 
 // Message Routes
-app.post(`${API_VERSION}/messages`, async (req, res) => {
+app.post('/api/messages', async (req, res) => {
   try {
     const { name, email, phone, message } = req.body;
     
@@ -616,7 +613,7 @@ app.post(`${API_VERSION}/messages`, async (req, res) => {
 });
 
 // Admin route to get all messages
-app.get(`${API_VERSION}/messages`, async (req, res) => { // Temporarily removed auth
+app.get('/api/messages', async (req, res) => { // Temporarily removed auth
   try {
     const messages = await Message.find().sort('-createdAt');
     res.json({ success: true, data: messages });
@@ -626,7 +623,7 @@ app.get(`${API_VERSION}/messages`, async (req, res) => { // Temporarily removed 
 });
 
 // Update message status
-app.patch(`${API_VERSION}/messages/:id/status`, async (req, res) => {
+app.patch('/api/messages/:id/status', async (req, res) => {
   try {
     const { status } = req.body;
     const message = await Message.findByIdAndUpdate(
@@ -647,7 +644,7 @@ app.patch(`${API_VERSION}/messages/:id/status`, async (req, res) => {
 });
 
 // Add DELETE endpoint for messages
-app.delete(`${API_VERSION}/messages/:id`, async (req, res) => {
+app.delete('/api/messages/:id', async (req, res) => {
   try {
     const message = await Message.findByIdAndDelete(req.params.id);
     if (!message) {
@@ -1127,7 +1124,7 @@ app.get('/api/search', async (req, res) => {
 });
 
 // Update a project by ID
-app.put(`${API_VERSION}/projects/:id`, async (req, res) => {
+app.put('/api/projects/:id', async (req, res) => {
   try {
     const { title, description, category, technologies, liveUrl, githubUrl, imageUrl } = req.body;
     const update = {
