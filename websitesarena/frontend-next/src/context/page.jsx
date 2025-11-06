@@ -94,7 +94,17 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    // If this hook is called outside an AuthProvider (e.g. during SSR/prerender)
+    // return safe defaults instead of throwing so server-side builds don't crash.
+    // Client-side, the AuthProvider will provide real values.
+    return {
+      isAuthenticated: false,
+      isAdmin: false,
+      user: null,
+      loading: false,
+      login: async () => false,
+      logout: () => {},
+    };
   }
   return context;
 };
