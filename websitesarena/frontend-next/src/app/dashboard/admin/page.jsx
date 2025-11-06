@@ -9,7 +9,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { FaCheckCircle, FaPaperPlane, FaEye } from 'react-icons/fa';
 // use the shared axios instance `api` for all requests (configured with interceptors)
 
-const API_VERSION = '/api/v1';
 const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 const getStatusColor = (status) => {
@@ -258,7 +257,7 @@ const Dashboard = () => {
   const fetchMessages = async () => {
     setMessagesLoading(true);
     try {
-  const res = await api.get('/api/v1/messages');
+  const res = await api.get('/api/messages');
       setMessages(res.data.data || []);
       toast.success('Messages refreshed');
     } catch { toast.error('Failed to refresh messages'); }
@@ -281,7 +280,7 @@ const Dashboard = () => {
   api.get('/api/projects'),
   api.get('/api/feedback?admin=true'),
   api.get('/api/bookings'),
-  api.get('/api/v1/messages'),
+  api.get('/api/messages'),
   api.get('/api/careers'),
   api.get('/api/email/logs'), // Change endpoint to match backend
     ])
@@ -522,11 +521,11 @@ const Dashboard = () => {
     // Ensure proper API endpoint based on type
     let endpoint;
     if (type === 'messages') {
-      endpoint = `${API_VERSION}/messages/${id}`;
+      endpoint = `api/messages/${id}`;
     } else if (type === 'feedback') {
       endpoint = `/api/feedback/${id}`;
     } else if (type === 'projects') {
-      endpoint = `/api/v1/projects/${id}`;
+      endpoint = `/api/projects/${id}`;
     } else if (type === 'bookings') {
       endpoint = `/api/bookings/${id}`;
     } else if (type === 'clients') {
@@ -675,7 +674,7 @@ const Dashboard = () => {
         imageUrl = await uploadImage(projectForm.image);
       }
 
-      const response = await api.post('/api/v1/projects', {
+      const response = await api.post('/api/projects', {
         ...projectForm,
         imageUrl,
         technologies: projectForm.technologies.split(',').map(tech => tech.trim())
@@ -806,7 +805,8 @@ const Dashboard = () => {
   const handleMarkAsRead = async (id) => {
     try {
       const toastId = toast.loading('Updating message status...');
-      const response = await axios.patch(`${API_URL}${API_VERSION}/messages/${id}/status`, {
+      const response = await axios.patch(`${API_URL}/api/messages/${id}/status`
+, {
         status: 'read'
       });
       setMessages(prev => prev.map(m => m._id === id ? response.data.data : m));
@@ -819,7 +819,7 @@ const Dashboard = () => {
   const handleMessageResponded = async (id) => {
     try {
       const toastId = toast.loading('Marking message as responded...');
-      const response = await axios.patch(`${API_URL}${API_VERSION}/messages/${id}/status`, {
+      const response = await axios.patch(`${API_URL}/api/messages/${id}/status`, {
         status: 'responded'
       });
       setMessages(prev => prev.map(m => m._id === id ? response.data.data : m));
@@ -1756,7 +1756,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
                       <form onSubmit={async (e) => {
                         e.preventDefault();
                         try {
-                          const updated = await api.put(`/api/v1/projects/${selectedProject._id}`, selectedProject);
+                          const updated = await api.put(`/api/projects/${selectedProject._id}`, selectedProject);
                           setProjects((prev) => prev.map(p => p._id === selectedProject._id ? updated.data.data : p));
                           setEditProjectModal(false);
                           toast.success('Project updated successfully');
