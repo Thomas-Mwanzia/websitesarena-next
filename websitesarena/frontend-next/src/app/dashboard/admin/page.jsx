@@ -11,6 +11,11 @@ import { FaCheckCircle, FaPaperPlane, FaEye } from 'react-icons/fa';
 
 const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
+// Log warning if API URL is not set in production
+if (process.env.NODE_ENV === 'production' && !API_URL) {
+  console.warn('Warning: NEXT_PUBLIC_API_BASE_URL is not set in production environment');
+}
+
 const getStatusColor = (status) => {
   if (!status) return '';
   const statusLower = status.toLowerCase();
@@ -143,6 +148,15 @@ const Dashboard = () => {
     message: ''
   });
   const router = useRouter();
+
+  // Email sending state
+  const [emailForm, setEmailForm] = useState({
+    to: '',
+    subject: '',
+    content: '',
+    attachments: []
+  });
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   // State for analytics and health data
   const [reachData, setReachData] = useState({ days: [], weeks: [], months: [], years: [] });
@@ -304,14 +318,14 @@ const Dashboard = () => {
   useEffect(() => {
     if (activeTab === 'analytics') {
       Promise.all([
-  api.get('/api/analytics/overview'),
-  api.get('/api/analytics/demographics'),
-  api.get('/api/analytics/devices'),
-  api.get('/api/analytics/browsers'),
-  api.get('/api/analytics/sources'),
-  api.get('/api/analytics/pages'),
-        api.get('/api/analytics/engagement')
-      ]).then(({
+        api.get('/api/analytics/overview').catch(() => ({ data: { data: [] } })),
+        api.get('/api/analytics/demographics').catch(() => ({ data: { data: [] } })),
+        api.get('/api/analytics/devices').catch(() => ({ data: { data: [] } })),
+        api.get('/api/analytics/browsers').catch(() => ({ data: { data: [] } })), 
+        api.get('/api/analytics/sources').catch(() => ({ data: { data: [] } })),
+        api.get('/api/analytics/pages').catch(() => ({ data: { data: [] } })),
+        api.get('/api/analytics/engagement').catch(() => ({ data: { data: {} } }))
+      ]).then(([
         overview,
         demographicsRes,
         devicesRes,
@@ -319,7 +333,7 @@ const Dashboard = () => {
         sourcesRes,
         pagesRes,
         engagementRes
-      }) => {
+      ]) => {
         setReachData(prev => ({ ...prev, days: overview?.data?.data || [] }));
         setDemographics(demographicsRes?.data?.data || []);
         setDevices(devicesRes?.data?.data || []);
@@ -344,14 +358,14 @@ const Dashboard = () => {
     }
     if (activeTab === 'health') {
       Promise.all([
-        api.get('/api/health/uptime'),
-        api.get('/api/health/errors'),
-        api.get('/api/health/security'),
-        api.get('/api/health/performance'),
-        api.get('/api/health/links'),
-        api.get('/api/health/ssl'),
-        api.get('/api/health/dns')
-      ]).then(({
+        api.get('/api/health/uptime').catch(() => ({ data: { data: [] } })),
+        api.get('/api/health/errors').catch(() => ({ data: { data: [] } })),
+        api.get('/api/health/security').catch(() => ({ data: { data: [] } })),
+        api.get('/api/health/performance').catch(() => ({ data: { data: [] } })),
+        api.get('/api/health/links').catch(() => ({ data: { data: [] } })),
+        api.get('/api/health/ssl').catch(() => ({ data: { data: { daysLeft: 0, status: 'error', suggestion: 'API unavailable' } } })),
+        api.get('/api/health/dns').catch(() => ({ data: { data: { daysLeft: 0, status: 'error', suggestion: 'API unavailable' } } }))
+      ]).then(([
         uptimeRes,
         errorRes,
         securityRes,
@@ -359,7 +373,7 @@ const Dashboard = () => {
         linksRes,
         sslRes,
         dnsRes
-      }) => {
+      ]) => {
         setUptimeHistory(uptimeRes?.data?.data || []);
         setErrorRate(errorRes?.data?.data || []);
         setSecurity(securityRes?.data?.data || []);
@@ -1358,6 +1372,7 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
             <li><button onClick={() => setActiveTab('bookings')} className={`px-4 py-2 rounded-md ${activeTab === 'bookings' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}>Bookings</button></li>
             <li><button onClick={() => setActiveTab('messages')} className={`px-4 py-2 rounded-md ${activeTab === 'messages' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}>Messages</button></li>
             <li><button onClick={() => setActiveTab('clients')} className={`px-4 py-2 rounded-md ${activeTab === 'clients' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}>Clients</button></li>
+            <li><button onClick={() => setActiveTab('email')} className={`px-4 py-2 rounded-md ${activeTab === 'email' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}>Send Email</button></li>
             <li><button onClick={() => setActiveTab('emailLogs')} className={`px-4 py-2 rounded-md ${activeTab === 'emailLogs' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}>Email Logs</button></li>
             <li><button onClick={() => { setActiveTab('serverLogs'); fetchServerLogs(); }} className={`px-4 py-2 rounded-md ${activeTab === 'serverLogs' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}>Server Logs</button></li>
             <li><button onClick={() => setActiveTab('careers')} className={`px-4 py-2 rounded-md ${activeTab === 'careers' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}>Careers</button></li>
@@ -1510,6 +1525,131 @@ const typeOptions = ['Feature', 'Bug', 'Task'];
                   )}
                 </div>
               </>
+            )}
+
+            {activeTab === 'email' && (
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-bold text-white">Send Email</h2>
+                </div>
+                <div className="bg-gray-800 rounded-lg p-6">
+                  <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    try {
+                      setSendingEmail(true);
+                      const formData = new FormData();
+                      formData.append('to', emailForm.to);
+                      formData.append('subject', emailForm.subject);
+                      formData.append('content', emailForm.content);
+                      emailForm.attachments.forEach(file => {
+                        formData.append('attachments', file);
+                      });
+                      
+                      const response = await api.post('/api/email/send', formData, {
+                        headers: {
+                          'Content-Type': 'multipart/form-data',
+                        },
+                      });
+                      toast.success('Email sent successfully');
+                      setEmailForm({
+                        to: '',
+                        subject: '',
+                        content: '',
+                        attachments: []
+                      });
+                    } catch (error) {
+                      toast.error(error.response?.data?.message || 'Failed to send email');
+                    } finally {
+                      setSendingEmail(false);
+                    }
+                  }} className="space-y-4">
+                    <div>
+                      <label className="block text-gray-300 text-sm font-bold mb-2">To</label>
+                      <input
+                        type="email"
+                        value={emailForm.to}
+                        onChange={e => setEmailForm(prev => ({ ...prev, to: e.target.value }))}
+                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                        required
+                        placeholder="recipient@example.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 text-sm font-bold mb-2">Subject</label>
+                      <input
+                        type="text"
+                        value={emailForm.subject}
+                        onChange={e => setEmailForm(prev => ({ ...prev, subject: e.target.value }))}
+                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                        required
+                        placeholder="Email subject"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 text-sm font-bold mb-2">Content</label>
+                      <textarea
+                        value={emailForm.content}
+                        onChange={e => setEmailForm(prev => ({ ...prev, content: e.target.value }))}
+                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-h-[200px]"
+                        required
+                        placeholder="Write your email content here..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 text-sm font-bold mb-2">Attachments</label>
+                      <input
+                        type="file"
+                        multiple
+                        onChange={e => {
+                          const files = Array.from(e.target.files);
+                          setEmailForm(prev => ({ ...prev, attachments: files }));
+                        }}
+                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      />
+                      {emailForm.attachments.length > 0 && (
+                        <div className="mt-2 space-y-1">
+                          {emailForm.attachments.map((file, index) => (
+                            <div key={index} className="flex items-center justify-between text-sm text-gray-300">
+                              <span>{file.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEmailForm(prev => ({
+                                    ...prev,
+                                    attachments: prev.attachments.filter((_, i) => i !== index)
+                                  }));
+                                }}
+                                className="text-red-400 hover:text-red-300"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={sendingEmail}
+                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                      >
+                        {sendingEmail ? (
+                          <>
+                            <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                            <span>Sending...</span>
+                          </>
+                        ) : (
+                          <span>Send Email</span>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             )}
 
             {activeTab === 'analytics' && (

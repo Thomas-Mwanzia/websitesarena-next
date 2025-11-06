@@ -2640,7 +2640,68 @@ function emailWrapper(content) {
   `;
 }
 
-// --- Developer Password Test Endpoint ---
+// POST /api/email/send
+// Accepts multipart/form-data with fields: to, subject, content and files under 'attachments'
+// Uses existing sendEmail helper and logs via EmailLog (already handled inside sendEmail)
+const emailsUploadDir = path.join(__dirname, 'public', 'uploads', 'emails');
+if (!fs.existsSync(emailsUploadDir)) fs.mkdirSync(emailsUploadDir, { recursive: true });
+const emailsUpload = multer({
+  dest: emailsUploadDir,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB per file
+});
+
+app.post('/api/email/send', emailsUpload.array('attachments'), async (req, res) => {
+  try {
+    const { to, subject, content } = req.body || {};
+    if (!to || !subject || !content) {
+      return res.status(400).json({ success: false, message: 'to, subject and content are required' });
+    }
+
+    // Build attachment links (publicly served via /uploads)
+    const files = req.files || [];
+    const siteUrl = (process.env.SITE_URL || '').replace(/\/$/, '');
+    const attachmentLinks = files.map(f => ({
+      filename: f.originalname,
+      url: `${siteUrl || ''}/uploads/emails/${f.filename}`
+    }));
+
+    // Append attachments section to content so admin can see them in the email
+    const attachmentsHtml = attachmentLinks.length ? `
+      <hr/>
+      <h4>Attachments</h4>
+      <ul>
+        ${attachmentLinks.map(a => `<li><a href="${a.url}">${a.filename}</a></li>`).join('')}
+      </ul>
+    ` : '';
+
+    const html = emailWrapper(`${content}${attachmentsHtml}`);
+
+    const fromAddress = getResendFromAddress();
+    if (!resend || !fromAddress) {
+      return res.status(500).json({ success: false, message: 'Email service not configured' });
+    }
+
+    const sendResult = await sendEmail({
+      from: fromAddress,
+      to,
+      subject,
+      html,
+      type: 'notification'
+    });
+
+    if (!sendResult.success) {
+      return res.status(500).json({ success: false, message: sendResult.error?.message || 'Failed to send email', error: String(sendResult.error) });
+    }
+
+    // Return attachment links and resend response id if available
+    res.json({ success: true, message: 'Email sent', data: { attachments: attachmentLinks, resend: sendResult.data } });
+  } catch (error) {
+    console.error('Email send endpoint error:', error);
+    res.status(500).json({ success: false, message: error.message || 'Failed to send email' });
+  }
+});
+
+ // --- Developer Password Test Endpoint ---
 app.post('/api/developers/test-password', async (req, res) => {
   const { email, password } = req.body;
   const dev = await Developer.findOne({ email });
