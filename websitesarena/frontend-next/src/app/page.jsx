@@ -69,9 +69,8 @@ export default function Home() {
    
         </motion.h1>
         <p className="text-gray-300 max-w-3xl mx-auto">
-          We build SEO-driven websites, powerful web applications, and high-performing mobile apps.
-          Our services include design, development, performance optimization, eCommerce, APIs, and ongoing support.
-        </p>
+Do you need a good and <b>affordable website or mobile App </b> to <b> boost your sales? </b> From as low as 250 USD only - Welcome to Websites Arena.
+</p>
       </section>
 
       <section className="max-w-7xl mx-auto">
