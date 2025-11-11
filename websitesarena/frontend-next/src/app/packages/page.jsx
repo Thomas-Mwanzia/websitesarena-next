@@ -68,7 +68,7 @@ export default function PackagesPage() {
         transition={{ duration: 0.6 }}
         className="max-w-6xl mx-auto text-center mb-16"
       >
-        <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
           Our <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Packages</span>
         </h1>
         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
