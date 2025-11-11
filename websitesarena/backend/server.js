@@ -1576,8 +1576,22 @@ mongoose
 // --- Careers Application Endpoint ---
 const careersUploadDir = path.join(__dirname, 'public', 'uploads', 'careers');
 if (!fs.existsSync(careersUploadDir)) fs.mkdirSync(careersUploadDir, { recursive: true });
+
+// Configure multer for careers with storage configuration
+const careersStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, careersUploadDir);
+  },
+  filename: (req, file, cb) => {
+    // Preserve original filename with timestamp to avoid collisions
+    const timestamp = Date.now();
+    const originalName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+    cb(null, `${timestamp}-${originalName}`);
+  }
+});
+
 const careersUpload = multer({
-  dest: careersUploadDir,
+  storage: careersStorage,
   limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
   fileFilter: (req, file, cb) => {
     if (file.mimetype !== 'application/pdf') {
@@ -1603,7 +1617,7 @@ app.post('/api/careers', careersUpload.single('cv'), async (req, res) => {
     }
     const application = await CareerApplication.create({ name, email, phone, message, cvUrl });
     // Build absolute CV link
-    const siteUrl = process.env.SITE_URL || 'api.websitesraena.com';
+    const siteUrl = process.env.SITE_URL || 'https://websitesarena.com';
     const cvLink = cvUrl ? `${siteUrl}${cvUrl}` : '';
     // Send confirmation email
     let emailResult = { success: false };
@@ -1651,6 +1665,44 @@ app.post('/api/careers', careersUpload.single('cv'), async (req, res) => {
     }
     res.status(201).json({ success: true, message: 'Application submitted successfully', emailSent: emailResult.success, emailError: emailResult.success ? undefined : (emailResult.error?.message || emailResult.error), adminEmailSent: adminEmailResult.success, adminEmailError: adminEmailResult.success ? undefined : (adminEmailResult.error?.message || adminEmailResult.error) });
   } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// --- CV Download Endpoint ---
+app.get('/api/careers/download/:filename', (req, res) => {
+  try {
+    const filename = req.params.filename;
+    
+    // Security: Prevent directory traversal attacks
+    if (filename.includes('..') || filename.includes('/')) {
+      return res.status(400).json({ success: false, message: 'Invalid filename' });
+    }
+    
+    const filepath = path.join(careersUploadDir, filename);
+    
+    // Check if file exists
+    if (!fs.existsSync(filepath)) {
+      return res.status(404).json({ success: false, message: 'CV file not found' });
+    }
+    
+    // Set proper headers for file download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_URL || '*');
+    
+    // Stream the file
+    const filestream = fs.createReadStream(filepath);
+    filestream.pipe(res);
+    
+    filestream.on('error', (err) => {
+      console.error('File download error:', err);
+      if (!res.headersSent) {
+        res.status(500).json({ success: false, message: 'Error downloading file' });
+      }
+    });
+  } catch (error) {
+    console.error('CV download endpoint error:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 });

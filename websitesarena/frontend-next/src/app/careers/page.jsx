@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.websitesarena.com';
 
 const Careers = () => {
   const [form, setForm] = useState({
@@ -50,10 +50,20 @@ const Careers = () => {
       formData.append('phone', form.phone);
       formData.append('message', form.message);
       formData.append('cv', form.cv);
+      
+      if (!apiUrl || apiUrl === '') {
+        throw new Error('API URL not configured. Please contact support.');
+      }
+
       const res = await fetch(`${apiUrl}/api/careers`, {
         method: 'POST',
         body: formData
       });
+
+      if (!res.ok) {
+        throw new Error(`Server error: ${res.status} ${res.statusText}`);
+      }
+
       const data = await res.json();
       if (data.success) {
         setSubmitted(true);
@@ -63,8 +73,9 @@ const Careers = () => {
         toast.error(data.message || 'Submission failed.');
       }
     } catch (err) {
-      setError('Submission failed. Please try again.');
-      toast.error('Submission failed. Please try again.');
+      console.error('Career application error:', err);
+      setError(err.message || 'Submission failed. Please try again.');
+      toast.error(err.message || 'Submission failed. Please try again.');
     }
     setIsSubmitting(false);
   };
