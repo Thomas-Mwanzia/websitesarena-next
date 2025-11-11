@@ -59,7 +59,7 @@ const services = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-12 px-4">
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 pt-20 pb-12 px-4">
       <section className="max-w-6xl mx-auto text-center mb-12">
         <motion.h1
           initial={{ opacity: 0, y: -10 }}

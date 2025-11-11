@@ -1,5 +1,5 @@
 export const blogAwareness = {
-  title: "Why We Charge What We Charge — Our Promise of Value and Transparency",
+  title: "",
   intro: `
 At Websites Arena, we believe in honesty, creativity, and real results.
 We're not just selling websites — we're helping you build an online presence that actually grows your audience, attracts leads, and builds your brand.
