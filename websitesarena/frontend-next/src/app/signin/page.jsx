@@ -8,6 +8,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faEnvelope, faSpinner, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-hot-toast';
 
+export const metadata = {
+  robots: 'noindex, follow',
+  title: 'Sign In | Websites Arena',
+  description: 'Developer and admin sign in page'
+};
+
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

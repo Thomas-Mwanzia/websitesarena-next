@@ -3,6 +3,13 @@
 import React from 'react';
 import Link from 'next/link';
 import Head from "next/head";
+
+export const metadata = {
+  robots: 'noindex, follow',
+  title: '404 Not Found | Websites Arena',
+  description: 'Sorry, the page you are looking for does not exist.'
+};
+
 const NotFound = () => {
   return (
     <>

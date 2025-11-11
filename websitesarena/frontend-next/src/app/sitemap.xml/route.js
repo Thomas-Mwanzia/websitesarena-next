@@ -1,7 +1,7 @@
 export async function GET() {
   const baseUrl = process.env.SITE_URL || 'https://websitesarena.com';
 
-  // Default static routes
+  // Default static routes - ONLY public, indexable pages
   const staticRoutes = [
     '',
     'web-development',
@@ -10,10 +10,16 @@ export async function GET() {
     'pastprojects',
     'blog',
     'feedbacks',
+    'packages',
     'mobile-appdev',
     'mobile-app-development',
     'careers',
-    'signin'
+    // NOTE: Excluded protected pages:
+    // - signin (user-only page, not meant for SEO)
+    // - dashboard/* (protected routes)
+    // - clientauth (protected route)
+    // - notfound (error page)
+    // - networkerror (error page)
   ];
 
   // Helper to normalize URL

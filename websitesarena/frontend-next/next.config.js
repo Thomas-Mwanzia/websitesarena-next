@@ -29,11 +29,59 @@ export default {
   // Add redirects if needed
   async redirects() {
     return [
+      // Only redirect /dashboard to /dashboard/client (permanent 301 redirect)
+      // This helps preserve SEO value if any external links point to /dashboard
       {
         source: '/dashboard',
         destination: '/dashboard/client',
-        permanent: true,
+        permanent: true, // 301 redirect preserves SEO
       },
+    ];
+  },
+  
+  // Add headers to control indexing
+  async headers() {
+    return [
+      {
+        // Prevent indexing of dashboard pages (protected routes)
+        source: '/dashboard/:path*',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow'
+          }
+        ]
+      },
+      {
+        // Prevent indexing of signin page
+        source: '/signin',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, follow'
+          }
+        ]
+      },
+      {
+        // Prevent indexing of clientauth page
+        source: '/clientauth',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, follow'
+          }
+        ]
+      },
+      {
+        // Prevent indexing of notfound and networkerror pages
+        source: '/:path(notfound|networkerror)',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, follow'
+          }
+        ]
+      }
     ];
   },
 }
