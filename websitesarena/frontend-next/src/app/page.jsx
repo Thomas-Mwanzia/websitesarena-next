@@ -69,7 +69,7 @@ export default function Home() {
    
         </motion.h1>
         <p className="text-gray-300 max-w-3xl mx-auto">
-Do you need a good and <b>affordable website or mobile App </b> to <b> boost your sales? </b> From as low as 250 USD only - Welcome to Websites Arena.
+Do you need a good and <b>affordable website or mobile App </b> to <b> boost your sales? </b> From as low as 23,400 KES only - Welcome to Websites Arena.
 </p>
       </section>
 
