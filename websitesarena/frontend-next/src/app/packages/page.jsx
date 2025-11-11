@@ -47,7 +47,7 @@ export default function PackagesPage() {
     },
     {
       title: 'Enterprise',
-      price: 'KES 45,600',
+      price: 'KES 45,600 +',
       description:
         'Built for organizations that need scalability, performance, and custom features. We create a secure, powerful digital system for your brand.',
       features: [
@@ -110,7 +110,7 @@ export default function PackagesPage() {
               href="/contact"
               className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 transform hover:scale-105"
             >
-              Choose Package
+              Contact for more info
             </Link>
           </motion.div>
         ))}
