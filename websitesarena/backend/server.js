@@ -50,6 +50,41 @@ const validateInput = (schema) => {
 
 // Global Middleware
 app.use(requestLogger);
+
+// Enhanced CORS middleware
+app.use((req, res, next) => {
+  const origin = req.get('origin');
+  const allowedOrigins = [
+    process.env.CLIENT_URL,
+    'https://websitesarena.com',
+    'https://www.websitesarena.com',
+    'http://localhost:3000',
+    'http://localhost:3001'
+  ].filter(Boolean);
+  
+  // Log CORS requests for debugging
+  if (req.path.includes('/api/careers')) {
+    console.log(`[CORS Debug] Origin: ${origin}, Method: ${req.method}, Path: ${req.path}`);
+    console.log(`[CORS Debug] Allowed origins:`, allowedOrigins);
+  }
+
+  // Allow requests with no origin (like mobile apps or curl requests)
+  if (!origin || allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin || '*');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200);
+    }
+  } else if (req.path.includes('/api/careers')) {
+    console.log(`[CORS Debug] Origin blocked: ${origin}`);
+  }
+  
+  next();
+});
+
 app.use(cors({
   origin: function (origin, callback) {
     const allowedOrigins = [
@@ -1615,6 +1650,9 @@ const careersUpload = multer({
     cb(null, true);
   }
 });
+
+// --- OPTIONS handler for CORS preflight ---
+app.options('/api/careers', cors());
 
 app.post('/api/careers', careersUpload.single('cv'), async (req, res) => {
   try {

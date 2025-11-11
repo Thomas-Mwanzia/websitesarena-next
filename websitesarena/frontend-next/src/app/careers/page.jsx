@@ -55,13 +55,19 @@ const Careers = () => {
         throw new Error('API URL not configured. Please contact support.');
       }
 
+      console.log('Submitting career application to:', `${apiUrl}/api/careers`);
       const res = await fetch(`${apiUrl}/api/careers`, {
         method: 'POST',
-        body: formData
+        body: formData,
+        // Don't set Content-Type - let browser set it for FormData
       });
 
+      console.log('Response status:', res.status, res.statusText);
+
       if (!res.ok) {
-        throw new Error(`Server error: ${res.status} ${res.statusText}`);
+        const errorText = await res.text().catch(() => res.statusText);
+        console.error('Server error response:', errorText);
+        throw new Error(`Server error: ${res.status} ${res.statusText}. ${errorText}`);
       }
 
       const data = await res.json();
@@ -73,6 +79,7 @@ const Careers = () => {
         toast.error(data.message || 'Submission failed.');
       }
     } catch (err) {
+      console.error('Detailed error:', err);
       console.error('Career application error:', err);
       setError(err.message || 'Submission failed. Please try again.');
       toast.error(err.message || 'Submission failed. Please try again.');
