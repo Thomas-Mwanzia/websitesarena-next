@@ -3,12 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-export const metadata = {
-  robots: 'noindex, follow',
-  title: 'Network Error | Websites Arena',
-  description: 'A network error occurred. Please try again.'
-};
-
 const NetworkError = () => {
   const [isRetrying, setIsRetrying] = useState(false);
 

@@ -8,12 +8,6 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import api from '@/app/utils/axios';
 import { toast } from 'react-hot-toast';
 
-export const metadata = {
-  robots: 'noindex, follow',
-  title: 'Client Authentication | Websites Arena',
-  description: 'Client sign in and registration'
-};
-
 export default function ClientAuth() {
   const [tab, setTab] = useState('signin');
   const [name, setName] = useState('');
