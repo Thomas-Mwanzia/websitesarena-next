@@ -113,7 +113,7 @@ const NotFound = () => {
             <nav className="mb-6 flex flex-wrap justify-center gap-4" aria-label="Helpful links">
               <Link href="/" className="text-blue-400 hover:underline">Home</Link>
               <Link href="/book-service" className="text-blue-400 hover:underline">Book Service</Link>
-              <Link href="/pastprojects" className="text-blue-400 hover:underline">Portfolio</Link>
+              <Link href="/past-projects" className="text-blue-400 hover:underline">Portfolio</Link>
               <Link href="feedbacks" className="text-blue-400 hover:underline">Client Feedback</Link>
               <Link href="/contact" className="text-blue-400 hover:underline">Contact</Link>
             </nav>

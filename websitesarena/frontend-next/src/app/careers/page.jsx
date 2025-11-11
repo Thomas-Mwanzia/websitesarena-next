@@ -2,8 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
-
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.websitesarena.com';
+import api from '../utils/axios';
 
 const Careers = () => {
   const [form, setForm] = useState({
@@ -51,38 +50,25 @@ const Careers = () => {
       formData.append('message', form.message);
       formData.append('cv', form.cv);
       
-      if (!apiUrl || apiUrl === '') {
-        throw new Error('API URL not configured. Please contact support.');
-      }
-
-      console.log('Submitting career application to:', `${apiUrl}/api/careers`);
-      const res = await fetch(`${apiUrl}/api/careers`, {
-        method: 'POST',
-        body: formData,
-        // Don't set Content-Type - let browser set it for FormData
+      // Use axios instance like all other working API calls
+      const res = await api.post('/api/careers', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
-      console.log('Response status:', res.status, res.statusText);
-
-      if (!res.ok) {
-        const errorText = await res.text().catch(() => res.statusText);
-        console.error('Server error response:', errorText);
-        throw new Error(`Server error: ${res.status} ${res.statusText}. ${errorText}`);
-      }
-
-      const data = await res.json();
-      if (data.success) {
+      if (res.data.success) {
         setSubmitted(true);
         toast.success('Application submitted successfully!');
       } else {
-        setError(data.message || 'Submission failed.');
-        toast.error(data.message || 'Submission failed.');
+        setError(res.data.message || 'Submission failed.');
+        toast.error(res.data.message || 'Submission failed.');
       }
     } catch (err) {
-      console.error('Detailed error:', err);
       console.error('Career application error:', err);
-      setError(err.message || 'Submission failed. Please try again.');
-      toast.error(err.message || 'Submission failed. Please try again.');
+      const errorMsg = err.response?.data?.message || err.message || 'Submission failed. Please try again.';
+      setError(errorMsg);
+      toast.error(errorMsg);
     }
     setIsSubmitting(false);
   };
