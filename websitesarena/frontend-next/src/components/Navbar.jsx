@@ -24,6 +24,7 @@ const navigation = [
   },
   { name: "About Us", href: "/about" },
   { name: "Past Projects", href: "/pastprojects" },
+  { name: "Blog", href: "/blog" },
   { name: "Contact Us", href: "/contact" },
   { name: "Client Feedback", href: "/feedbacks" },
   { name: "Careers", href: "/careers" },

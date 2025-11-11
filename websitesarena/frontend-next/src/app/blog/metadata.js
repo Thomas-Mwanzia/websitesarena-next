@@ -1,40 +1,32 @@
-const siteUrl = process.env.SITE_URL || 'https://websitesarena.com';
-
 export const metadata = {
-  title: 'Websites Arena Blog — Web Development, Performance & SEO',
-  description: 'Read practical guides, case studies and how‑tos on web development, performance optimisation, SEO and small business digital strategy from Websites Arena.',
-  keywords: 'web development blog, web performance, SEO tips, Next.js, Tailwind, PWA, small business website',
+  title: 'Blog Packages & Pricing | Websites Arena',
+  description:
+    'Discover affordable blog packages starting from KES 23,400. Professional blogging solutions with SEO optimization, analytics, and unlimited posts. Perfect for creators and businesses.',
+  keywords:
+    'blog platform, blogging solution, blog hosting, SEO blog, affordable blog, Kenyan blog platform, content management',
   openGraph: {
-    title: 'Websites Arena Blog — Web Development, Performance & SEO',
-    description: 'Practical guides and case studies on building fast, accessible, and SEO-friendly websites.',
-    url: `${siteUrl}/blog`,
-    siteName: 'Websites Arena',
+    title: 'Blog Packages & Pricing | Websites Arena',
+    description:
+      'Launch your blog with our affordable packages. SEO-optimized, secure, and fully featured. From KES 23,400/month.',
     type: 'website',
-    images: [{ url: `${siteUrl}/logo.jpg`, width: 1200, height: 630, alt: 'Websites Arena' }]
+    url: 'https://websitesarena.com/blog',
+    images: [
+      {
+        url: 'https://websitesarena.com/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Websites Arena Blog Packages',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Websites Arena Blog',
-    description: 'Guides, case studies and tips on web development, SEO, and performance.'
+    title: 'Blog Packages & Pricing | Websites Arena',
+    description:
+      'Professional blogging platform with SEO tools, analytics, and affordable pricing starting from KES 23,400.',
+    images: ['https://websitesarena.com/og-image.jpg'],
   },
-  alternates: { canonical: `${siteUrl}/blog` }
+  alternates: {
+    canonical: 'https://websitesarena.com/blog',
+  },
 };
-
-export default function BlogRouteHead() {
-  const schemaData = {
-    '@context': 'https://schema.org',
-    '@type': 'Blog',
-    name: 'Websites Arena Blog',
-    url: `${siteUrl}/blog`,
-    description: 'Practical guides and case studies on building fast, accessible, and SEO-friendly websites.',
-    publisher: {
-      '@type': 'Organization',
-      name: 'Websites Arena',
-      logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.jpg` }
-    }
-  };
-
-  return (
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
-  );
-}

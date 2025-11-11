@@ -8,6 +8,7 @@ export async function GET() {
     'contact',
     'about',
     'pastprojects',
+    'blog',
     'feedbacks',
     'mobile-appdev',
     'mobile-app-development',

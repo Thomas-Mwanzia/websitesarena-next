@@ -2,7 +2,7 @@ import React from 'react';
 import Head from "next/head";
 const SEO = ({ 
   title = 'Websites Arena - Professional Web Development Solutions',
-  description = 'Transform your online presence with Websites Arena. We create modern, responsive, and SEO-optimized websites tailored to your business needs. Get started from 23,400 KES.',
+  description = 'Transform your online presence with Websites Arena. We create modern, responsive, and SEO-optimized websites tailored to your business needs. Get started from $150.',
   keywords = 'web development, website design, responsive websites, SEO optimization, professional web solutions, affordable websites, business websites, e-commerce solutions',
   ogImage = 'https://websitesarena.com/og-image.jpg',
   ogType = 'website',

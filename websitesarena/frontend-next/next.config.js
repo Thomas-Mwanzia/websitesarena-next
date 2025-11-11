@@ -12,10 +12,14 @@ export default {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
   async rewrites() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || 'https://api.websitesarena.com';
+    if (!apiUrl || apiUrl.includes('undefined')) {
+      console.warn('[next.config.js] Warning: API URL not configured. Using default fallback.');
+    }
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/:path*`,
+        destination: `${apiUrl}/api/:path*`,
       },
     ];
   },
