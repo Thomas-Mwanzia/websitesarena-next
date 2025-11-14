@@ -1,6 +1,7 @@
 const siteUrl = process.env.SITE_URL || "https://websitesarena.com";
 
 export const metadata = {
+  robots: 'index, follow',
   title: "Websites Arena — Web & Mobile App Developers in Kenya",
   description:
     "Websites Arena is a leading web and mobile app development agency serving Nairobi, Mombasa, Kisumu, Nakuru and across Kenya. We build responsive websites, eCommerce platforms, and native/cross-platform apps — packages from KES 23,400.",

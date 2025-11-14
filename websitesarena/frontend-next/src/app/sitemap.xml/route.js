@@ -4,15 +4,14 @@ export async function GET() {
   // Default static routes - ONLY public, indexable pages
   const staticRoutes = [
     '',
-    'web-development',
+    'webdevelopment',
     'contact',
     'about',
     'pastprojects',
     'blog',
     'feedbacks',
     'packages',
-    'mobile-appdev',
-    'mobile-app-development',
+    'mobileappdev',
     'careers',
     // NOTE: Excluded protected pages:
     // - signin (user-only page, not meant for SEO)

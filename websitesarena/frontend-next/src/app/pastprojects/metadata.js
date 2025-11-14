@@ -1,4 +1,5 @@
 export const metadata = {
+  robots: 'index, follow',
   title: 'Portfolio | Past Projects | Websites Arena',
   description: 'Explore Websites Arena past projects across Nairobi, Mombasa, Kisumu and Nakuru. Case studies include eCommerce, booking systems, and mobile apps built for Kenyan businesses.',
   keywords: 'portfolio Kenya, web projects Nairobi, mobile apps Mombasa, past projects Kisumu, portfolio Nakuru, case study web development Kenya',

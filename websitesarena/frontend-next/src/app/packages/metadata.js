@@ -1,4 +1,5 @@
 export const metadata = {
+  robots: 'index, follow',
   title: 'Packages & Pricing — Websites Arena (KES)',
   description:
     'Transparent website and mobile app packages in Kenya. Starter packages from KES 23,400. Clear deliverables, hosting, and 7 months maintenance included.',

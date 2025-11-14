@@ -1,4 +1,5 @@
 export const metadata = {
+  robots: 'index, follow',
   title: 'Blog Packages & Pricing | Websites Arena',
   description:
     'Discover affordable blog packages starting from KES 23,400. Professional blogging solutions with SEO optimization, analytics, and unlimited posts. Perfect for creators and businesses.',

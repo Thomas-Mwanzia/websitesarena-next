@@ -1,4 +1,5 @@
 export const metadata = {
+  robots: 'index, follow',
   title: 'Mobile App Development Nairobi | Websites Arena',
   description: 'Mobile app development services in Nairobi and across Kenya — iOS, Android, React Native, Flutter, M-Pesa integrations, and app store publishing.',
   keywords: 'mobile app developers Kenya, app developer Nairobi, M-Pesa integration, Android developer Kenya, iOS developer Nairobi',

@@ -1,4 +1,5 @@
 export const metadata = {
+  robots: 'index, follow',
   title: 'Web Development Services Nairobi | Websites Arena',
   description: 'Custom web development in Nairobi and across Kenya — eCommerce, responsive websites, performance optimization, and SEO-ready builds. Serving Nairobi, Mombasa, Kisumu, Nakuru.',
   keywords: 'web development Nairobi, ecommerce development Kenya, web developer Nairobi, responsive website Kenya, nextjs developer Nairobi',
