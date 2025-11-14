@@ -3,7 +3,7 @@ import Head from "next/head";
 const SEO = ({ 
   title = 'Websites Arena - Professional Web Development Solutions',
   description = 'Transform your online presence with Websites Arena. We create modern, responsive, and SEO-optimized websites tailored to your business needs. Get started from $150.',
-  keywords = 'web development, website design, responsive websites, SEO optimization, professional web solutions, affordable websites, business websites, e-commerce solutions',
+  keywords = 'web development Kenya, web developer Nairobi, mobile app developers Kenya, website design Mombasa, e-commerce Kenya, M-Pesa integration, affordable websites Kisumu, Nakuru web development',
   ogImage = 'https://websitesarena.com/og-image.jpg',
   ogType = 'website',
   schemaType = 'WebSite',

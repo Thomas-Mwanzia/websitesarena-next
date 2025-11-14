@@ -1,18 +1,18 @@
 export const metadata = {
-  title: 'Packages & Pricing | Websites Arena',
+  title: 'Packages & Pricing — Websites Arena (KES)',
   description:
-    'Explore our flexible, affordable web development and digital services packages. Custom quotes available. Contact us for a tailored solution.',
+    'Transparent website and mobile app packages in Kenya. Starter packages from KES 23,400. Clear deliverables, hosting, and 7 months maintenance included.',
   keywords:
-    'packages, pricing, web development packages, affordable web design, custom solutions',
+    'website packages Kenya, packages KES, web development packages Nairobi, app packages Mombasa, affordable website Kenya, starter website KES 23400',
   openGraph: {
-    title: 'Packages & Pricing | Websites Arena',
+    title: 'Packages & Pricing — Websites Arena',
     description:
-      'Find the perfect package for your business. Flexible pricing and custom solutions available.',
+      'Transparent website and mobile app packages in Kenya. Starter packages from KES 23,400. Clear deliverables and local support.',
     type: 'website',
     url: 'https://websitesarena.com/packages',
     images: [
       {
-        url: 'https://websitesarena.com/og-image.jpg',
+        url: 'https://websitesarena.com/og-image-packages.jpg',
         width: 1200,
         height: 630,
         alt: 'Websites Arena Packages',
@@ -21,12 +21,18 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Packages & Pricing | Websites Arena',
+    title: 'Packages & Pricing — Websites Arena',
     description:
-      'Affordable web development packages tailored to your business needs.',
-    images: ['https://websitesarena.com/og-image.jpg'],
+      'Starter website packages from KES 23,400. Local support in Nairobi, Mombasa, Kisumu and Nakuru.',
+    images: ['https://websitesarena.com/og-image-packages.jpg'],
   },
   alternates: {
     canonical: 'https://websitesarena.com/packages',
+  },
+  schema: {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Web & App Packages',
+    description: 'List of service packages with pricing in Kenyan Shillings (KES)',
   },
 };

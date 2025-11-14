@@ -116,6 +116,76 @@ export default function PackagesPage() {
         ))}
       </motion.section>
 
+      {/* FAQ Section */}
+      <section className="max-w-4xl mx-auto mb-12">
+        <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-8">
+          <h2 className="text-2xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+          <div className="space-y-4 text-gray-300">
+            <details className="bg-gray-900/20 rounded-lg p-4">
+              <summary className="font-semibold cursor-pointer">How much does a basic website cost in Kenya?</summary>
+              <p className="mt-2">Our Starter package begins at <span className="font-semibold text-blue-400">KES 23,400</span> and includes up to 5 pages, responsive design, and 7 months of maintenance.</p>
+            </details>
+            <details className="bg-gray-900/20 rounded-lg p-4">
+              <summary className="font-semibold cursor-pointer">Do you integrate M-Pesa and other Kenyan payment gateways?</summary>
+              <p className="mt-2">Yes — we integrate M-Pesa, PayPal, and other common payment gateways used in Kenya. Tell us which gateway you prefer during onboarding.</p>
+            </details>
+            <details className="bg-gray-900/20 rounded-lg p-4">
+              <summary className="font-semibold cursor-pointer">How long does it take to build a site or app?</summary>
+              <p className="mt-2">Most starter websites are delivered within 2–3 weeks. Mobile apps typically take 6–12 weeks depending on complexity.</p>
+            </details>
+            <details className="bg-gray-900/20 rounded-lg p-4">
+              <summary className="font-semibold cursor-pointer">What support is included after launch?</summary>
+              <p className="mt-2">We include 7 months of maintenance and upgrades with every package. Ongoing support is available from KES 1,000/month.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      {/* Structured FAQ JSON-LD for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'How much does a basic website cost in Kenya?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Our Starter package begins at KES 23,400 and includes up to 5 pages, responsive design, and 7 months of maintenance.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'Do you integrate M-Pesa and other Kenyan payment gateways?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Yes — we integrate M-Pesa, PayPal, and other common payment gateways used in Kenya.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'How long does it take to build a site or app?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Most starter websites are delivered within 2–3 weeks. Mobile apps typically take 6–12 weeks depending on complexity.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'What support is included after launch?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'We include 7 months of maintenance and upgrades with every package. Ongoing support is available from KES 1,000/month.'
+                }
+              }
+            ]
+          })
+        }}
+      />
+
       {/* CTA Section */}
       <motion.section
         initial={{ opacity: 0 }}

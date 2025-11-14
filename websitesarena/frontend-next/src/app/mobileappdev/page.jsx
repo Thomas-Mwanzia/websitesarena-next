@@ -164,6 +164,29 @@ const MobileAppDevelopment = () => {
           </div>
         </div>
 
+        {/* FAQ JSON-LD for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: [
+                {
+                  '@type': 'Question',
+                  name: 'Do you integrate M-Pesa into mobile apps?',
+                  acceptedAnswer: { '@type': 'Answer', text: 'Yes — we build mobile apps with M-Pesa and other local payment integrations for Kenyan users.' }
+                },
+                {
+                  '@type': 'Question',
+                  name: 'How long does it take to build a mobile app in Kenya?',
+                  acceptedAnswer: { '@type': 'Answer', text: 'Mobile apps typically take between 6–12 weeks depending on complexity; we provide a delivery timeline during scoping.' }
+                }
+              ]
+            })
+          }}
+        />
+
         {/* CTA Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <motion.div

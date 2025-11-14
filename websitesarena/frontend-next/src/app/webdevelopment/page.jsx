@@ -147,6 +147,29 @@ const WebDevelopment = () => {
           </div>
         </div>
 
+        {/* FAQ JSON-LD for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: [
+                {
+                  '@type': 'Question',
+                  name: 'What web development services do you offer in Nairobi?',
+                  acceptedAnswer: { '@type': 'Answer', text: 'We offer custom web development, eCommerce, responsive design, performance optimization, and SEO for businesses in Nairobi and across Kenya.' }
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Can you build eCommerce websites with local payment integrations?',
+                  acceptedAnswer: { '@type': 'Answer', text: 'Yes — we integrate M-Pesa, PayPal, and other payment gateways used in Kenya.' }
+                }
+              ]
+            })
+          }}
+        />
+
         {/* CTA Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <motion.div

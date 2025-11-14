@@ -1,9 +1,10 @@
 export const metadata = {
   title: 'Portfolio | Past Projects | Websites Arena',
-  description: 'Explore the portfolio of Websites Arena. See our past web and mobile app projects, technologies used, and the results we deliver for our clients.',
+  description: 'Explore Websites Arena past projects across Nairobi, Mombasa, Kisumu and Nakuru. Case studies include eCommerce, booking systems, and mobile apps built for Kenyan businesses.',
+  keywords: 'portfolio Kenya, web projects Nairobi, mobile apps Mombasa, past projects Kisumu, portfolio Nakuru, case study web development Kenya',
   openGraph: {
     title: 'Portfolio | Past Projects | Websites Arena',
-    description: 'Explore the portfolio of Websites Arena. See our past web and mobile app projects, technologies used, and the results we deliver for our clients.',
+    description: 'Explore Websites Arena past projects across Nairobi, Mombasa, Kisumu and Nakuru. Case studies include eCommerce, booking systems, and mobile apps built for Kenyan businesses.',
     type: 'website',
     url: 'https://websitesarena.com/pastprojects',
     images: [
